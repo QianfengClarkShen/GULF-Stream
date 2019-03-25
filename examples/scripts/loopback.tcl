@@ -90,7 +90,7 @@ connect_bd_net [get_bd_pins netmask/dout] [get_bd_pins GULF_Stream_0/netmask]
 set_property name init [get_bd_intf_ports CLK_IN_D_0]
 set_property name gt_ref [get_bd_intf_ports gt_ref_clk_0]
 set_property CONFIG.FREQ_HZ 200000000 [get_bd_intf_ports /init]
-add_files -fileset constrs_1 -norecurse /home/owl/src/GULF_Stream/examples/loopback_server.xdc
+add_files -fileset constrs_1 -norecurse $project_dir/loopback_server.xdc
 
 validate_bd_design
 make_wrapper -files [get_files $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/${project_name}.bd] -top
