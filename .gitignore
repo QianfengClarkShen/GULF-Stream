@@ -1,0 +1,10 @@
+/examples
+/ip_repo
+!/examples/loopback_server.xdc
+!/examples/Makefile
+!/examples/scripts
+!/ip_repo/hls_ips/Makefile
+!/ip_repo/hls_ips/scripts
+!/ip_repo/assembled_ips/interfaces
+!/ip_repo/hls_ips/Makefile
+!/ip_repo/hls_ips/scripts
