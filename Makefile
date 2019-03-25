@@ -1,8 +1,8 @@
-IPCore:
+GULF_Stream_IPCore:
 	$(MAKE) -C ip_repo/hls_ips
 	$(MAKE) -C ip_repo/assembled_ips
 
-loopback_example: IPCore
+loopback_example: GULF_Stream_IPCore
 	$(MAKE) -C examples loopback_server
 
 clean_all:
