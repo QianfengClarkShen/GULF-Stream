@@ -5,7 +5,7 @@ void payload_validator(
 	ap_uint<32>	counter_in,
 	AXISBUS		s_axis,
 	ap_uint<64>	&latency_sum,
-	ap_uint<32>	&time_elapse,
+	ap_uint<64>	&time_elapse,
 	ap_uint<32>	&curr_cnt,
 	ap_uint<1>	&done,
 	ap_uint<1>	&error
@@ -20,18 +20,18 @@ void payload_validator(
 	#pragma HLS INTERFACE ap_none port=done
 	#pragma HLS INTERFACE ap_none port=error
 
-	static ap_uint<32>	packet_cnt = 1;
+	static ap_uint<32>	packet_cnt;
 	static ap_uint<1>	IN_PACKET;
 	static ap_uint<1>	done_reg;
 	static ap_uint<1>	error_reg;
 	static ap_uint<64>	latency_sum_reg;
 	static ap_uint<32>	latency;
 	static ap_uint<1>	init_reg;
-	static ap_uint<32>	time_elapse_reg;
+	static ap_uint<64>	time_elapse_reg;
 
 	error = error_reg;
 	done = done_reg;
-	curr_cnt = packet_cnt;
+	curr_cnt = packet_cnt+1;
 	latency_sum = latency_sum_reg;
 	time_elapse = time_elapse_reg;
 
@@ -40,10 +40,10 @@ void payload_validator(
         }
 
 	latency_sum_reg += latency;
-	done_reg = (packet_cnt == (packet_num + 1));
+	done_reg = (packet_cnt == packet_num);
 
 	if (!IN_PACKET & s_axis.valid & !error_reg) {
-		if (s_axis.data(511,480) == packet_cnt && s_axis.keep[56]) {
+		if (s_axis.data(511,480) == (packet_cnt+1) && s_axis.keep[56]) {
 			latency = counter_in - s_axis.data(479,448);
 		} else {
 			latency = 0;

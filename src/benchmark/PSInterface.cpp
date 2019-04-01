@@ -10,11 +10,13 @@ void PSInterface (
 	ap_uint<32>     axil_netmask,
 	ap_uint<32>     axil_mac_high16,
 	ap_uint<32>	axil_mac_low32,
-	ap_uint<32>	&axil_tx_timeElapse,
+	ap_uint<32>	&axil_tx_timeElapse_high,
+	ap_uint<32>     &axil_tx_timeElapse_low,
 	ap_uint<32>	&axil_tx_done,
 	ap_uint<32>	&axil_latency_sum_high,
 	ap_uint<32>     &axil_latency_sum_low,
- 	ap_uint<32>	&axil_rx_timeElaspe,
+ 	ap_uint<32>	&axil_rx_timeElaspe_high,
+	ap_uint<32>     &axil_rx_timeElaspe_low,
 	ap_uint<32>	&axil_rx_done,
 	ap_uint<32>	&axil_rx_error,
 	ap_uint<32>	&axil_rx_curr_cnt,
@@ -28,10 +30,10 @@ void PSInterface (
 	ap_uint<32>	&gateway,
 	ap_uint<32>	&netmask,
 	ap_uint<48>	&mac,
-	ap_uint<32>	tx_timeElapse,
+	ap_uint<64>	tx_timeElapse,
 	ap_uint<1>	tx_done,
 	ap_uint<64>	latency_sum,
-	ap_uint<32>	rx_timeElapse,
+	ap_uint<64>	rx_timeElapse,
 	ap_uint<32>	rx_cnt,
 	ap_uint<1>	rx_done,
 	ap_uint<1>	rx_error
@@ -47,11 +49,13 @@ void PSInterface (
 	#pragma HLS INTERFACE s_axilite port=axil_netmask
 	#pragma HLS INTERFACE s_axilite port=axil_mac_high16
 	#pragma HLS INTERFACE s_axilite port=axil_mac_low32
-	#pragma HLS INTERFACE s_axilite port=axil_tx_timeElapse
+	#pragma HLS INTERFACE s_axilite port=axil_tx_timeElapse_high
+	#pragma HLS INTERFACE s_axilite port=axil_tx_timeElapse_low
 	#pragma HLS INTERFACE s_axilite port=axil_tx_done
 	#pragma HLS INTERFACE s_axilite port=axil_latency_sum_high
 	#pragma HLS INTERFACE s_axilite port=axil_latency_sum_low
-	#pragma HLS INTERFACE s_axilite port=axil_rx_timeElaspe
+	#pragma HLS INTERFACE s_axilite port=axil_rx_timeElaspe_high
+	#pragma HLS INTERFACE s_axilite port=axil_rx_timeElaspe_low
 	#pragma HLS INTERFACE s_axilite port=axil_rx_done
 	#pragma HLS INTERFACE s_axilite port=axil_rx_error
 	#pragma HLS INTERFACE s_axilite port=axil_rx_curr_cnt
@@ -70,6 +74,7 @@ void PSInterface (
 	#pragma HLS INTERFACE ap_none port=rx_cnt
 	#pragma HLS INTERFACE ap_none port=rx_done
 	#pragma HLS INTERFACE ap_none port=rx_error
+
 	start 	=	axil_start[0];
 	pkt_num	=	axil_pkt_num;
 	pkt_len	=	axil_pkt_len;
@@ -79,11 +84,13 @@ void PSInterface (
 	mac	=	(axil_mac_high16(15,0),axil_mac_low32);
 
 	axil_rx_curr_cnt	=	rx_cnt;
-	axil_tx_timeElapse	=	tx_timeElapse;
+	axil_tx_timeElapse_high	=	tx_timeElapse(63,32);
+	axil_tx_timeElapse_low	=	tx_timeElapse(31,0);
 	axil_tx_done		=	tx_done;
 	axil_latency_sum_high	=	latency_sum(63,32);
 	axil_latency_sum_low	=	latency_sum(31,0);
-	axil_rx_timeElaspe	=	rx_timeElapse;
+	axil_rx_timeElaspe_high	=	rx_timeElapse(63,32);
+	axil_rx_timeElaspe_low	=	rx_timeElapse(31,0);
 	axil_rx_done		=	rx_done;
 	axil_rx_error		=	rx_error;
 

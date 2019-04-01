@@ -6,7 +6,7 @@ void payload_generator(
 	ap_uint<32>	packet_num,
 	ap_uint<16>	payload_len,
 	ap_uint<32>	&counter_out,
-	ap_uint<32>	&time_elapse,
+	ap_uint<64>	&time_elapse,
 	AXISBUS		&m_axis,
 	ap_uint<1>	&done
 ) {
@@ -21,7 +21,7 @@ void payload_generator(
 	static ap_uint<1>	status;
 	static ap_uint<32>	cnt;
 	static ap_uint<32>	packet_id;
-	static ap_uint<32>	time_elapse_reg;
+	static ap_uint<64>	time_elapse_reg;
 	static ap_uint<16>	length_remain;
 	static AXISBUS		axis_reg;
 
