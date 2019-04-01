@@ -7,14 +7,20 @@ examples/*
 
 !ip_repo
 ip_repo/*
+!ip_repo/hls_ips
+ip_repo/hls_ips/*
 !ip_repo/hls_ips/Makefile
 !ip_repo/hls_ips/scripts
 !ip_repo/hls_ips/scripts/*
+!ip_repo/assembled_ips
+ip_repo/assembled_ips/*
+!ip_repo/assembled_ips/Makefile
+!ip_repo/assembled_ips/scripts
+!ip_repo/assembled_ips/scripts/*
 !ip_repo/assembled_ips/interfaces
 !ip_repo/assembled_ips/interfaces/*
-!ip_repo/hls_ips/Makefile
-!ip_repo/hls_ips/scripts
-!ip_repo/hls_ips/scripts/*
+!ip_repo/benchmark_ips
+ip_repo/benchmark_ips/*
 !ip_repo/benchmark_ips/Makefile
 !ip_repo/benchmark_ips/scripts
 !ip_repo/benchmark_ips/scripts/*
