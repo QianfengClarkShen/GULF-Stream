@@ -32,45 +32,7 @@ void keep2mty(
 	ap_uint<16> 	keep,
 	ap_uint<4>	&mty
 ) {
-#pragma HLS INTERFACE ap_ctrl_none port=return
 #pragma HLS INLINE
-/*
-	if (keep[0]) {
-		mty = 0;
-	} else if (keep[1]) {
-		mty = 1;
-	} else if (keep[2]) {
-                mty = 2;
-        } else if (keep[3]) {
-                mty = 3;
-        } else if (keep[4]) {
-                mty = 4;
-        } else if (keep[5]) {
-                mty = 5;
-        } else if (keep[6]) {
-                mty = 6;
-        } else if (keep[7]) {
-                mty = 7;
-        } else if (keep[8]) {
-                mty = 8;
-        } else if (keep[9]) {
-                mty = 9;
-        } else if (keep[10]) {
-                mty = 10;
-        } else if (keep[11]) {
-                mty = 11;
-        } else if (keep[12]) {
-                mty = 12;
-        } else if (keep[13]) {
-                mty = 13;
-        } else if (keep[14]) {
-                mty = 14;
-        } else if (keep[15]) {
-                mty = 15;
-        } else {
-		mty = 0;
-	}
-*/
 	switch(keep) {
 		case 65535: //16'b1111111111111111
 			mty = 0;
