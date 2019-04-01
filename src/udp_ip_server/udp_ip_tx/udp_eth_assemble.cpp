@@ -1,32 +1,3 @@
-/*
-Copyright (c) 2019, Qianfeng Shen
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, 
-this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, 
-this list of conditions and the following disclaimer in the documentation 
-and/or other materials provided with the distribution.
-
-3. Neither the name of the copyright holder nor the names of its contributors 
-may be used to endorse or promote products derived from this software 
-without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
-HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
-EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.// Copyright (c) 2019, Qianfeng Shen.
-************************************************/
-
 #include <ap_int.h>
 #include "udp_ip_tx.h"
 void udp_eth_assemble(
@@ -58,10 +29,11 @@ void udp_eth_assemble(
 	static PAYLOAD_FULL	payload_in_reg;
 	static AXIS_RAW		packet_out_reg;
 	static ap_uint<1>	IN_PACKET;
-	static ap_uint<1>	payload_ready_reg;
+	static ap_uint<1>	payloadin_pause;
 
 	packet_out = packet_out_reg;
-	action_re = packet_out_ready & !action_empty & ((action_valid & payload_in.valid & !IN_PACKET & !payload_in.keep[41]) | (IN_PACKET & (!payload_in.keep[41] | payload_in_reg.last)));
+	action_re = packet_out_ready & !action_empty & ((payload_in.valid & payload_in.last & !payload_in.keep[41]) | payloadin_pause);
+	payload_ready = packet_out_ready & action_valid & !payloadin_pause;
 
 	if (packet_out_ready) {
 		if (action_valid & payload_in.valid & !IN_PACKET) {
@@ -103,14 +75,16 @@ void udp_eth_assemble(
 		} else {
 			packet_out_reg = AXIS_RAW_DUMMY;
 		}
+		if (action_valid) {
+			payload_in_reg = payload_in;
+		}
+		if (payloadin_pause) {
+			payloadin_pause = 0;
+		} else if (action_valid & payload_in.valid & payload_in.last & payload_in.keep[41]) {
+			payloadin_pause = 1;
+		}
 	}
 
-	if (action_valid & packet_out_ready) {
-		payload_in_reg = payload_in;
-	}
-
-	payload_ready = (packet_out_ready & action_valid) & (!(payload_in.keep[41] & payload_in.last) | !payload_ready_reg);
-	payload_ready_reg = (packet_out_ready & action_valid) & (!(payload_in.keep[41] & payload_in.last) | !payload_ready_reg);
 	myMac_reg = myMac;
 	myIP_reg = myIP;
 }

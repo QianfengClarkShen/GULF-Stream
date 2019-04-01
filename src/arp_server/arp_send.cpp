@@ -170,12 +170,16 @@ void arp_send(
 	lookup_req_valid_reg1 = lookup_req_valid_reg0;
 	lookup_req_valid_reg0 = lookup_req_valid_reg;
 //output
-	arptable_addr_reg = ((lookup_req & netmaskReg) == (gatewayReg & netmaskReg)) ? lookup_req(7,0) : gatewayReg(7,0);
+	if (lookup_req(7,0) != 0) {
+		arptable_addr_reg = ((lookup_req & netmaskReg) == (gatewayReg & netmaskReg)) ? lookup_req(7,0) : gatewayReg(7,0);
+	}
 	lookup_result_reg = arptable_data(79,32);
 //input
 	lookup_req_valid_reg = (lookup_req_reg != lookup_req) && (lookup_req(7,0) != 0);
-	lookup_req_reg = lookup_req;
-	lookup_req_issued = ((lookup_req & netmaskReg) == (gatewayReg & netmaskReg)) ? lookup_req : gatewayReg;
+	if (lookup_req(7,0) != 0) {
+		lookup_req_reg = lookup_req;
+		lookup_req_issued = ((lookup_req & netmaskReg) == (gatewayReg & netmaskReg)) ? lookup_req : gatewayReg;
+	}
 	call_for_responce_reg = call_for_responce;
 	myMacReg = myMac;
 	myIPReg = myIP;
