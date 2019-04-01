@@ -7,4 +7,4 @@ benchmark: scripts/benchmark.tcl ../ip_repo/*
 	vivado -mode tcl -source scripts/benchmark.tcl -nolog -nojournal
 
 clean:
-	rm -rf loopback_server
+	rm -rf loopback_server benchmark
