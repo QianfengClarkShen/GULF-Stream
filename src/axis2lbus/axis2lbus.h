@@ -51,3 +51,5 @@ void keep2mty(
 	ap_uint<16>	keep,
 	ap_uint<4>	&mty
 );
+
+const struct LBUS LBUS_DUMMY = {0,0,0,0,0,0};

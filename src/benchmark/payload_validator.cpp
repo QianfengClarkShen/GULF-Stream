@@ -28,59 +28,68 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.// Copyright (c) 2019, Qianfen
 ************************************************/
 
 #include <ap_int.h>
-#include "axis2lbus.h"
-void axis2lbus(
+#include "benchmark.h"
+void payload_validator(
+	ap_uint<32>	packet_num,
+	ap_uint<32>	counter_in,
 	AXISBUS		s_axis,
-	LBUS		lbus[4],
-	ap_uint<1>	lbus_ready,
-	ap_uint<1>	&axis_ready
+	ap_uint<64>	&latency_sum,
+	ap_uint<64>	&time_elapse,
+	ap_uint<32>	&curr_cnt,
+	ap_uint<1>	&done,
+	ap_uint<1>	&error
 ) {
 	#pragma HLS INTERFACE ap_ctrl_none port=return
-	#pragma HLS array_partition variable=lbus complete
-	#pragma HLS INTERFACE ap_none port=lbus
+	#pragma HLS INTERFACE ap_none port=packet_num
+	#pragma HLS INTERFACE ap_none port=counter_in
 	#pragma HLS INTERFACE ap_none port=s_axis
-	#pragma HLS INTERFACE ap_none port=lbus_ready
-	#pragma HLS INTERFACE ap_none port=axis_ready
+	#pragma HLS INTERFACE ap_none port=latency_sum
+	#pragma HLS INTERFACE ap_none port=time_elapse
+	#pragma HLS INTERFACE ap_none port=curr_cnt
+	#pragma HLS INTERFACE ap_none port=done
+	#pragma HLS INTERFACE ap_none port=error
 
-	static ap_uint<1> IN_PACKET;
+	static ap_uint<32>	packet_cnt;
+	static ap_uint<1>	IN_PACKET;
+	static ap_uint<1>	done_reg;
+	static ap_uint<1>	error_reg;
+	static ap_uint<64>	latency_sum_reg;
+	static ap_uint<32>	latency;
+	static ap_uint<1>	init_reg;
+	static ap_uint<64>	time_elapse_reg;
 
-	axis_ready = lbus_ready;
+	error = error_reg;
+	done = done_reg;
+	curr_cnt = packet_cnt+1;
+	latency_sum = latency_sum_reg;
+	time_elapse = time_elapse_reg;
 
-	if (lbus_ready) {
-		lbus[0].data = s_axis.data(511,384);
-		lbus[1].data = s_axis.data(383,256);
-		lbus[2].data = s_axis.data(255,128);
-		lbus[3].data = s_axis.data(127,0);
-		lbus[0].ena = s_axis.valid;
-		lbus[1].ena = s_axis.valid & s_axis.keep[47];
-		lbus[2].ena = s_axis.valid & s_axis.keep[31];
-		lbus[3].ena = s_axis.valid & s_axis.keep[15];
-		lbus[0].sop = s_axis.valid & !IN_PACKET;
-		lbus[1].sop = 0;
-		lbus[2].sop = 0;
-		lbus[3].sop = 0;
-		lbus[0].eop = s_axis.valid & s_axis.last & ~s_axis.keep[47];
-		lbus[1].eop = s_axis.valid & s_axis.last & s_axis.keep[47] & ~s_axis.keep[31];
-		lbus[2].eop = s_axis.valid & s_axis.last & s_axis.keep[31] & ~s_axis.keep[15];
-		lbus[3].eop = s_axis.valid & s_axis.last & s_axis.keep[15];
-		lbus[0].err = 0;
-		lbus[1].err = 0;
-		lbus[2].err = 0;
-		lbus[3].err = 0;
-		keep2mty(s_axis.keep(63,48),lbus[0].mty);
-		keep2mty(s_axis.keep(47,32),lbus[1].mty);
-		keep2mty(s_axis.keep(31,16),lbus[2].mty);
-		keep2mty(s_axis.keep(15,0),lbus[3].mty);
+        if (init_reg & !done_reg) {
+                time_elapse_reg++;
+        }
+
+	latency_sum_reg += latency;
+	done_reg = (packet_cnt == packet_num);
+
+	if (!IN_PACKET & s_axis.valid & !error_reg) {
+		if (s_axis.data(511,480) == (packet_cnt+1) && s_axis.keep[56]) {
+			latency = counter_in - s_axis.data(479,448);
+		} else {
+			latency = 0;
+			error_reg = 1;
+		}
 	} else {
-		lbus[0] = LBUS_DUMMY;
-		lbus[1] = LBUS_DUMMY;
-		lbus[2] = LBUS_DUMMY;
-		lbus[3] = LBUS_DUMMY;
+		latency = 0;
 	}
 
-	if (s_axis.valid & ~s_axis.last) {
-		IN_PACKET = 1;
-	} else if (s_axis.valid & s_axis.last) {
+	if (!IN_PACKET & s_axis.valid) {
+		init_reg = 1;
+	}
+
+	if (s_axis.valid & s_axis.last) {
 		IN_PACKET = 0;
+		packet_cnt++;
+	} else if (!IN_PACKET & s_axis.valid) {
+		IN_PACKET = 1;
 	}
 }
