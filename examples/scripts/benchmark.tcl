@@ -1,6 +1,8 @@
 set project_dir [file dirname [file dirname [file normalize [info script]]]]
 set project_name "benchmark"
 set script_dir [file dirname [file normalize [info script]]]
+source $script_dir/util.tcl
+
 create_project $project_name $project_dir/$project_name -part xczu19eg-ffvc1760-2-i
 set_property board_part fidus.com:sidewinder100:part0:1.0 [current_project]
 create_bd_design $project_name
@@ -9,16 +11,16 @@ set_property ip_repo_paths "${project_dir}/../ip_repo" [current_project]
 update_ip_catalog -rebuild
 #make 100g ethernet core hireachy
 create_bd_cell -type hier eth_100g
-create_bd_cell -type ip -vlnv xilinx.com:ip:cmac_usplus:2.4 eth_100g/cmac_usplus_0
+addip cmac_usplus eth_100g/cmac_usplus_0
 set_property -dict [list CONFIG.CMAC_CAUI4_MODE {1} CONFIG.NUM_LANES {4} CONFIG.GT_REF_CLK_FREQ {322.265625} CONFIG.GT_DRP_CLK {200.0} CONFIG.RX_CHECK_PREAMBLE {1} CONFIG.RX_CHECK_SFD {1} CONFIG.TX_FLOW_CONTROL {0} CONFIG.RX_FLOW_CONTROL {0} CONFIG.ENABLE_AXI_INTERFACE {0} CONFIG.CMAC_CORE_SELECT {CMACE4_X0Y1} CONFIG.GT_GROUP_SELECT {X0Y12~X0Y15} CONFIG.LANE1_GT_LOC {X0Y12} CONFIG.LANE2_GT_LOC {X0Y13} CONFIG.LANE3_GT_LOC {X0Y14} CONFIG.LANE4_GT_LOC {X0Y15} CONFIG.LANE5_GT_LOC {NA} CONFIG.LANE6_GT_LOC {NA} CONFIG.LANE7_GT_LOC {NA} CONFIG.LANE8_GT_LOC {NA} CONFIG.LANE9_GT_LOC {NA} CONFIG.LANE10_GT_LOC {NA}] [get_bd_cells eth_100g/cmac_usplus_0]
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_ds_buf:2.1 eth_100g/util_ds_buf_0
+addip util_ds_buf eth_100g/util_ds_buf_0
 
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 eth_100g/zero
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 eth_100g/one
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 eth_100g/zeroX10
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 eth_100g/zeroX12
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 eth_100g/zeroX16
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 eth_100g/zeroX56
+addip xlconstant eth_100g/zero
+addip xlconstant eth_100g/one
+addip xlconstant eth_100g/zeroX10
+addip xlconstant eth_100g/zeroX12
+addip xlconstant eth_100g/zeroX16
+addip xlconstant eth_100g/zeroX56
 set_property -dict [list CONFIG.CONST_VAL {0}] [get_bd_cells eth_100g/zero]
 set_property -dict [list CONFIG.CONST_WIDTH {16} CONFIG.CONST_VAL {0}] [get_bd_cells eth_100g/zeroX16]
 set_property -dict [list CONFIG.CONST_WIDTH {56} CONFIG.CONST_VAL {0}] [get_bd_cells eth_100g/zeroX56]
@@ -66,13 +68,13 @@ connect_bd_intf_net [get_bd_intf_pins GULF_Stream_0/s_axis] [get_bd_intf_pins et
 connect_bd_net [get_bd_pins GULF_Stream_0/clk] [get_bd_pins eth_100g/cmac_usplus_0/gt_txusrclk2]
 
 
-create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.1 zynq_ultra_ps_e_0
+addip zynq_ultra_ps_e zynq_ultra_ps_e_0
 source $script_dir/ps_preset.tcl
 set_property -dict [apply_preset zynq_ultra_ps_e_0] [get_bd_cells zynq_ultra_ps_e_0]
 set_property -dict [list CONFIG.PSU__USE__S_AXI_GP2 {0}] [get_bd_cells zynq_ultra_ps_e_0]
 
-create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_0
-create_bd_cell -type ip -vlnv xilinx.com:ip:smartconnect:1.0 smartconnect_0
+addip proc_sys_reset proc_sys_reset_0
+addip smartconnect smartconnect_0
 set_property -dict [list CONFIG.NUM_SI {1}] [get_bd_cells smartconnect_0]
 create_bd_cell -type ip -vlnv Qianfeng_Clark_Shen:user:GULFStream_benchmark:1.0 GULFStream_benchmark_0
 
@@ -89,18 +91,18 @@ connect_bd_intf_net [get_bd_intf_pins smartconnect_0/S00_AXI] [get_bd_intf_pins 
 connect_bd_intf_net [get_bd_intf_pins GULFStream_benchmark_0/payload_m_axis] [get_bd_intf_pins GULF_Stream_0/payload_from_user]
 connect_bd_intf_net [get_bd_intf_pins GULF_Stream_0/payload_to_user] [get_bd_intf_pins GULFStream_benchmark_0/payload_s_axis]
 connect_bd_intf_net [get_bd_intf_pins GULFStream_benchmark_0/GULFStream_config] [get_bd_intf_pins GULF_Stream_0/meta_config]
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 port_num
+addip xlconstant port_num
 set_property -dict [list CONFIG.CONST_WIDTH {16}] [get_bd_cells port_num]
 connect_bd_net [get_bd_pins port_num/dout] [get_bd_pins GULF_Stream_0/remote_port_tx]
 connect_bd_net [get_bd_pins port_num/dout] [get_bd_pins GULF_Stream_0/local_port_tx]
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 remote_ip
+addip xlconstant remote_ip
 set_property -dict [list CONFIG.CONST_WIDTH {32} CONFIG.CONST_VAL {0x0a0a0ef0}] [get_bd_cells remote_ip]
 connect_bd_net [get_bd_pins remote_ip/dout] [get_bd_pins GULF_Stream_0/remote_ip_tx]
 
 set_property name init [get_bd_intf_ports CLK_IN_D_0]
 set_property name gt_ref [get_bd_intf_ports gt_ref_clk_0]
 set_property CONFIG.FREQ_HZ 200000000 [get_bd_intf_ports /init]
-add_files -fileset constrs_1 -norecurse $project_dir/loopback_server.xdc
+add_files -fileset constrs_1 -norecurse $project_dir/constraints/sidewinder100.xdc
 assign_bd_address [get_bd_addr_segs {GULFStream_benchmark_0/AXILITE_Config/reg0 }]
 validate_bd_design
 make_wrapper -files [get_files $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/${project_name}.bd] -top

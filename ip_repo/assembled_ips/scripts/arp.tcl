@@ -1,5 +1,6 @@
 set project_dir [file dirname [file dirname [file normalize [info script]]]]
 set project_name "arp_server_100g"
+source ${project_dir}/scripts/util.tcl
 
 create_project $project_name $project_dir/$project_name -part xczu19eg-ffvc1760-2-i
 set_property board_part fidus.com:sidewinder100:part0:1.0 [current_project]
@@ -8,10 +9,10 @@ create_bd_design $project_name
 set_property ip_repo_paths "${project_dir}/../hls_ips" [current_project]
 update_ip_catalog -rebuild
 
-create_bd_cell -type ip -vlnv xilinx.com:hls:arp_receive:1.0 arp_receive_0
-create_bd_cell -type ip -vlnv xilinx.com:hls:arp_send:1.0 arp_send_0
+addip arp_receive arp_receive_0
+addip arp_send arp_send_0
 
-create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen:8.4 blk_mem_gen_0
+addip blk_mem_gen blk_mem_gen_0
 set_property -dict [list CONFIG.Memory_Type {Simple_Dual_Port_RAM} CONFIG.Enable_32bit_Address {false} CONFIG.Use_Byte_Write_Enable {false} CONFIG.Byte_Size {9} CONFIG.Assume_Synchronous_Clk {true} CONFIG.Write_Width_A {80} CONFIG.Write_Depth_A {256} CONFIG.Read_Width_A {80} CONFIG.Operating_Mode_A {NO_CHANGE} CONFIG.Enable_A {Always_Enabled} CONFIG.Write_Width_B {80} CONFIG.Read_Width_B {80} CONFIG.Operating_Mode_B {READ_FIRST} CONFIG.Enable_B {Always_Enabled} CONFIG.Register_PortA_Output_of_Memory_Primitives {false} CONFIG.Register_PortB_Output_of_Memory_Primitives {true} CONFIG.Use_RSTA_Pin {false} CONFIG.Port_B_Clock {100} CONFIG.Port_B_Enable_Rate {100} CONFIG.use_bram_block {Stand_Alone} CONFIG.EN_SAFETY_CKT {false}] [get_bd_cells blk_mem_gen_0]
 
 make_bd_pins_external [get_bd_pins arp_receive_0/ap_clk]

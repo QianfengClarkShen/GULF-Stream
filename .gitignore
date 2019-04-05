@@ -1,6 +1,7 @@
 !examples
 examples/*
-!examples/loopback_server.xdc
+!examples/constraints
+!examples/constraints/*
 !examples/Makefile
 !examples/scripts
 !examples/scripts/*

@@ -1,5 +1,6 @@
 set project_dir [file dirname [file dirname [file normalize [info script]]]]
 set project_name "GULFStream_benchmark"
+source ${project_dir}/scripts/util.tcl
 
 create_project $project_name $project_dir/$project_name -part xczu19eg-ffvc1760-2-i
 set_property board_part fidus.com:sidewinder100:part0:1.0 [current_project]
@@ -8,10 +9,10 @@ create_bd_design $project_name
 set_property ip_repo_paths "${project_dir}/../" [current_project]
 update_ip_catalog -rebuild
 
-create_bd_cell -type ip -vlnv xilinx.com:hls:payload_generator:1.0 payload_generator_0
-create_bd_cell -type ip -vlnv xilinx.com:hls:payload_validator:1.0 payload_validator_0
-create_bd_cell -type ip -vlnv xilinx.com:hls:PSInterface:1.0 PSInterface_0
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_0
+addip payload_generator payload_generator_0
+addip payload_validator payload_validator_0
+addip PSInterface PSInterface_0
+addip util_vector_logic util_vector_logic_0
 set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {not} CONFIG.LOGO_FILE {data/sym_notgate.png}] [get_bd_cells util_vector_logic_0]
 
 make_bd_pins_external  [get_bd_pins payload_validator_0/ap_clk]

@@ -1,5 +1,6 @@
 set project_dir [file dirname [file dirname [file normalize [info script]]]]
 set project_name "udp_ip_server_100g"
+source ${project_dir}/scripts/util.tcl
 
 create_project $project_name $project_dir/$project_name -part xczu19eg-ffvc1760-2-i
 set_property board_part fidus.com:sidewinder100:part0:1.0 [current_project]
@@ -8,25 +9,25 @@ create_bd_design $project_name
 set_property ip_repo_paths "${project_dir}/../hls_ips" [current_project]
 update_ip_catalog -rebuild
 
-create_bd_cell -type ip -vlnv xilinx.com:hls:udp_ip_receive:1.0 udp_ip_receive_0
-create_bd_cell -type ip -vlnv xilinx.com:hls:action_generator:1.0 action_generator_0
-create_bd_cell -type ip -vlnv xilinx.com:hls:payload_checksum:1.0 payload_checksum_0
-create_bd_cell -type ip -vlnv xilinx.com:hls:action_excecutor:1.0 action_excecutor_0
-create_bd_cell -type ip -vlnv xilinx.com:ip:fifo_generator:13.2 fifo_generator_0
+addip udp_ip_receive udp_ip_receive_0
+addip action_generator action_generator_0
+addip payload_checksum payload_checksum_0
+addip action_excecutor action_excecutor_0
+addip fifo_generator fifo_generator_0
 set_property -dict [list CONFIG.Fifo_Implementation {Common_Clock_Block_RAM} CONFIG.Performance_Options {First_Word_Fall_Through} CONFIG.Input_Data_Width {65} CONFIG.Input_Depth {256} CONFIG.Output_Data_Width {65} CONFIG.Output_Depth {256} CONFIG.Use_Embedded_Registers {false} CONFIG.Reset_Type {Asynchronous_Reset} CONFIG.Full_Flags_Reset_Value {1} CONFIG.Valid_Flag {true} CONFIG.Use_Extra_Logic {true} CONFIG.Data_Count_Width {9} CONFIG.Write_Data_Count_Width {9} CONFIG.Read_Data_Count_Width {9} CONFIG.Full_Threshold_Assert_Value {255} CONFIG.Full_Threshold_Negate_Value {254} CONFIG.Empty_Threshold_Assert_Value {4} CONFIG.Empty_Threshold_Negate_Value {5} CONFIG.Enable_Safety_Circuit {false}] [get_bd_cells fifo_generator_0]
 
-create_bd_cell -type ip -vlnv xilinx.com:ip:fifo_generator:13.2 fifo_generator_1
+addip fifo_generator fifo_generator_1
 set_property -dict [list CONFIG.Fifo_Implementation {Common_Clock_Block_RAM} CONFIG.Performance_Options {First_Word_Fall_Through} CONFIG.Input_Data_Width {161} CONFIG.Input_Depth {256} CONFIG.Output_Data_Width {161} CONFIG.Output_Depth {256} CONFIG.Use_Embedded_Registers {false} CONFIG.Reset_Type {Asynchronous_Reset} CONFIG.Full_Flags_Reset_Value {1} CONFIG.Valid_Flag {true} CONFIG.Use_Extra_Logic {true} CONFIG.Data_Count_Width {9} CONFIG.Write_Data_Count_Width {9} CONFIG.Read_Data_Count_Width {9} CONFIG.Full_Threshold_Assert_Value {255} CONFIG.Full_Threshold_Negate_Value {254} CONFIG.Empty_Threshold_Assert_Value {4} CONFIG.Empty_Threshold_Negate_Value {5} CONFIG.Enable_Safety_Circuit {false}] [get_bd_cells fifo_generator_1]
 
-create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo:1.1 axis_data_fifo_0
+addip axis_data_fifo axis_data_fifo_0
 set_property -dict [list CONFIG.TDATA_NUM_BYTES.VALUE_SRC USER CONFIG.TUSER_WIDTH.VALUE_SRC USER CONFIG.TID_WIDTH.VALUE_SRC USER CONFIG.HAS_TLAST.VALUE_SRC USER CONFIG.HAS_TSTRB.VALUE_SRC USER CONFIG.TDEST_WIDTH.VALUE_SRC USER CONFIG.HAS_TKEEP.VALUE_SRC USER] [get_bd_cells axis_data_fifo_0]
 set_property -dict [list CONFIG.TDATA_NUM_BYTES {64} CONFIG.FIFO_DEPTH {256} CONFIG.HAS_TKEEP {1} CONFIG.HAS_TLAST {1}] [get_bd_cells axis_data_fifo_0]
-create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo:1.1 axis_data_fifo_1
+addip axis_data_fifo axis_data_fifo_1
 set_property -dict [list CONFIG.TDATA_NUM_BYTES.VALUE_SRC USER CONFIG.HAS_TLAST.VALUE_SRC USER CONFIG.HAS_TKEEP.VALUE_SRC USER CONFIG.TDEST_WIDTH.VALUE_SRC USER CONFIG.TID_WIDTH.VALUE_SRC USER CONFIG.TUSER_WIDTH.VALUE_SRC USER CONFIG.HAS_TSTRB.VALUE_SRC USER] [get_bd_cells axis_data_fifo_1]
 set_property -dict [list CONFIG.TDATA_NUM_BYTES {64} CONFIG.FIFO_DEPTH {256} CONFIG.HAS_TKEEP {1} CONFIG.HAS_TLAST {1}] [get_bd_cells axis_data_fifo_1]
-create_bd_cell -type ip -vlnv xilinx.com:hls:udp_eth_assemble:1.0 udp_eth_assemble_0
-create_bd_cell -type ip -vlnv xilinx.com:hls:udp_ip_tx:1.0 udp_ip_tx_0
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_0
+addip udp_eth_assemble udp_eth_assemble_0
+addip udp_ip_tx udp_ip_tx_0
+addip util_vector_logic util_vector_logic_0
 set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {not} CONFIG.LOGO_FILE {data/sym_notgate.png}] [get_bd_cells util_vector_logic_0]
 
 make_bd_pins_external  [get_bd_pins udp_ip_receive_0/ap_clk]
