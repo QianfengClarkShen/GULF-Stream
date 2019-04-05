@@ -1,5 +1,6 @@
 set project_dir [file dirname [file dirname [file normalize [info script]]]]
 set project_name "GULF_Stream"
+source ${project_dir}/scripts/util.tcl
 
 create_project $project_name $project_dir/$project_name -part xczu19eg-ffvc1760-2-i
 set_property board_part fidus.com:sidewinder100:part0:1.0 [current_project]
@@ -8,22 +9,30 @@ create_bd_design $project_name
 set_property ip_repo_paths [list "${project_dir}/../hls_ips" "$project_dir"] [current_project]
 update_ip_catalog -rebuild
 
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_0
+addip util_vector_logic util_vector_logic_0
 set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {not} CONFIG.LOGO_FILE {data/sym_notgate.png}] [get_bd_cells util_vector_logic_0]
 
 create_bd_cell -type ip -vlnv Qianfeng_Clark_Shen:user:udp_ip_server_100g:1.0 udp_ip_server_100g_0
 create_bd_cell -type ip -vlnv Qianfeng_Clark_Shen:user:arp_server_100g:1.0 arp_server_100g_0
-create_bd_cell -type ip -vlnv xilinx.com:hls:ether_protocol_spliter:1.0 ether_protocol_spliter_0
-create_bd_cell -type ip -vlnv xilinx.com:hls:ether_protocol_assembler:1.0 ether_protocol_assembler_0
+addip ether_protocol_spliter ether_protocol_spliter_0
+addip ether_protocol_assembler ether_protocol_assembler_0
 
 
-create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo:1.1 axis_data_fifo_0
+addip axis_data_fifo axis_data_fifo_0
 set_property -dict [list CONFIG.TDATA_NUM_BYTES.VALUE_SRC USER CONFIG.TID_WIDTH.VALUE_SRC USER CONFIG.TDEST_WIDTH.VALUE_SRC USER CONFIG.TUSER_WIDTH.VALUE_SRC USER CONFIG.HAS_TSTRB.VALUE_SRC USER CONFIG.HAS_TKEEP.VALUE_SRC USER CONFIG.HAS_TLAST.VALUE_SRC USER] [get_bd_cells axis_data_fifo_0]
 set_property -dict [list CONFIG.TDATA_NUM_BYTES {64} CONFIG.FIFO_DEPTH {16} CONFIG.HAS_TKEEP {1} CONFIG.HAS_TLAST {1}] [get_bd_cells axis_data_fifo_0]
+if {[get_property "CONFIG.FIFO_MEMORY_TYPE" [get_bd_cells axis_data_fifo_0]] != ""} {
+	set_property -dict [list CONFIG.FIFO_MEMORY_TYPE {distributed}] [get_bd_cells axis_data_fifo_0]
+}
 
-create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo:1.1 axis_data_fifo_1
+
+addip axis_data_fifo axis_data_fifo_1
 set_property -dict [list CONFIG.TDATA_NUM_BYTES.VALUE_SRC USER CONFIG.TID_WIDTH.VALUE_SRC USER CONFIG.TDEST_WIDTH.VALUE_SRC USER CONFIG.TUSER_WIDTH.VALUE_SRC USER CONFIG.HAS_TSTRB.VALUE_SRC USER CONFIG.HAS_TLAST.VALUE_SRC USER CONFIG.HAS_TKEEP.VALUE_SRC USER] [get_bd_cells axis_data_fifo_1]
 set_property -dict [list CONFIG.TDATA_NUM_BYTES {64} CONFIG.FIFO_DEPTH {16} CONFIG.HAS_TKEEP {1} CONFIG.HAS_TLAST {1}] [get_bd_cells axis_data_fifo_1]
+if {[get_property "CONFIG.FIFO_MEMORY_TYPE" [get_bd_cells axis_data_fifo_1]] != ""} {
+	set_property -dict [list CONFIG.FIFO_MEMORY_TYPE {distributed}] [get_bd_cells axis_data_fifo_1]
+}
+
 
 make_bd_pins_external  [get_bd_pins arp_server_100g_0/clk]
 make_bd_pins_external  [get_bd_pins arp_server_100g_0/rst]

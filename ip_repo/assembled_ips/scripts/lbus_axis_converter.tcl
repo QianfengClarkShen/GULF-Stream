@@ -1,5 +1,6 @@
 set root_dir [file dirname [file dirname [file normalize [info script]]]]
 set project_name "lbus_axis_converter"
+source ${root_dir}/scripts/util.tcl
 
 create_project $project_name $root_dir/$project_name -part xczu19eg-ffvc1760-2-i
 set_property board_part fidus.com:sidewinder100:part0:1.0 [current_project]
@@ -8,18 +9,18 @@ create_bd_design "${project_name}"
 set_property ip_repo_paths [list "${root_dir}/../hls_ips" "${root_dir}/interfaces/lbus_definition"] [current_project]
 update_ip_catalog -rebuild
 
-create_bd_cell -type ip -vlnv xilinx.com:hls:lbus_fifo_read:1.0 lbus_fifo_read_0
-create_bd_cell -type ip -vlnv xilinx.com:hls:lbus_fifo_write:1.0 lbus_fifo_write_0
+addip lbus_fifo_read lbus_fifo_read_0
+addip lbus_fifo_write lbus_fifo_write_0
 
-create_bd_cell -type ip -vlnv xilinx.com:ip:fifo_generator:13.2 fifo_generator_0
+addip fifo_generator fifo_generator_0
 set_property -dict [list CONFIG.Fifo_Implementation {Common_Clock_Distributed_RAM} CONFIG.Input_Data_Width {544} CONFIG.Input_Depth {16} CONFIG.Output_Data_Width {544} CONFIG.Output_Depth {16} CONFIG.Use_Embedded_Registers {false} CONFIG.Valid_Flag {true} CONFIG.Data_Count_Width {4} CONFIG.Write_Data_Count_Width {4} CONFIG.Read_Data_Count_Width {4} CONFIG.Full_Threshold_Assert_Value {14} CONFIG.Full_Threshold_Negate_Value {13}] [get_bd_cells fifo_generator_0]
 set_property -dict [list CONFIG.Reset_Type {Asynchronous_Reset} CONFIG.Full_Flags_Reset_Value {1} CONFIG.Enable_Safety_Circuit {false}] [get_bd_cells fifo_generator_0]
 
-create_bd_cell -type ip -vlnv xilinx.com:ip:fifo_generator:13.2 fifo_generator_1
+addip fifo_generator fifo_generator_1
 set_property -dict [list CONFIG.Fifo_Implementation {Common_Clock_Distributed_RAM} CONFIG.Input_Data_Width {408} CONFIG.Input_Depth {16} CONFIG.Output_Data_Width {408} CONFIG.Output_Depth {16} CONFIG.Use_Embedded_Registers {false} CONFIG.Reset_Type {Asynchronous_Reset} CONFIG.Full_Flags_Reset_Value {1} CONFIG.Valid_Flag {true} CONFIG.Data_Count_Width {4} CONFIG.Write_Data_Count_Width {4} CONFIG.Read_Data_Count_Width {4} CONFIG.Full_Threshold_Assert_Value {14} CONFIG.Full_Threshold_Negate_Value {13} CONFIG.Enable_Safety_Circuit {false}] [get_bd_cells fifo_generator_1]
-create_bd_cell -type ip -vlnv xilinx.com:hls:axis2lbus:1.0 axis2lbus_0
+addip axis2lbus axis2lbus_0
 
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_0
+addip util_vector_logic util_vector_logic_0
 set_property -dict [list CONFIG.C_SIZE {1}] [get_bd_cells util_vector_logic_0]
 
 make_bd_pins_external  [get_bd_pins util_vector_logic_0/Res]
