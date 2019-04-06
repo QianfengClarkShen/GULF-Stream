@@ -17,22 +17,11 @@ create_bd_cell -type ip -vlnv Qianfeng_Clark_Shen:user:arp_server_100g:1.0 arp_s
 addip ether_protocol_spliter ether_protocol_spliter_0
 addip ether_protocol_assembler ether_protocol_assembler_0
 
+addip fifo_generator axis_data_fifo_0
+set_property -dict [list CONFIG.INTERFACE_TYPE {AXI_STREAM} CONFIG.Reset_Type {Asynchronous_Reset} CONFIG.TDATA_NUM_BYTES {64} CONFIG.TUSER_WIDTH {0} CONFIG.Enable_TLAST {true} CONFIG.TSTRB_WIDTH {64} CONFIG.HAS_TKEEP {true} CONFIG.TKEEP_WIDTH {64} CONFIG.FIFO_Implementation_wach {Common_Clock_Distributed_RAM} CONFIG.Full_Threshold_Assert_Value_wach {15} CONFIG.Empty_Threshold_Assert_Value_wach {14} CONFIG.FIFO_Implementation_wdch {Common_Clock_Builtin_FIFO} CONFIG.FIFO_Implementation_wrch {Common_Clock_Distributed_RAM} CONFIG.Full_Threshold_Assert_Value_wrch {15} CONFIG.Empty_Threshold_Assert_Value_wrch {14} CONFIG.FIFO_Implementation_rach {Common_Clock_Distributed_RAM} CONFIG.Full_Threshold_Assert_Value_rach {15} CONFIG.Empty_Threshold_Assert_Value_rach {14} CONFIG.FIFO_Implementation_rdch {Common_Clock_Builtin_FIFO} CONFIG.FIFO_Implementation_axis {Common_Clock_Distributed_RAM} CONFIG.FIFO_Application_Type_axis {Low_Latency_Data_FIFO} CONFIG.Input_Depth_axis {16} CONFIG.Full_Threshold_Assert_Value_axis {15} CONFIG.Empty_Threshold_Assert_Value_axis {14}] [get_bd_cells axis_data_fifo_0]
 
-addip axis_data_fifo axis_data_fifo_0
-set_property -dict [list CONFIG.TDATA_NUM_BYTES.VALUE_SRC USER CONFIG.TID_WIDTH.VALUE_SRC USER CONFIG.TDEST_WIDTH.VALUE_SRC USER CONFIG.TUSER_WIDTH.VALUE_SRC USER CONFIG.HAS_TSTRB.VALUE_SRC USER CONFIG.HAS_TKEEP.VALUE_SRC USER CONFIG.HAS_TLAST.VALUE_SRC USER] [get_bd_cells axis_data_fifo_0]
-set_property -dict [list CONFIG.TDATA_NUM_BYTES {64} CONFIG.FIFO_DEPTH {16} CONFIG.HAS_TKEEP {1} CONFIG.HAS_TLAST {1}] [get_bd_cells axis_data_fifo_0]
-if {[get_property "CONFIG.FIFO_MEMORY_TYPE" [get_bd_cells axis_data_fifo_0]] != ""} {
-	set_property -dict [list CONFIG.FIFO_MEMORY_TYPE {distributed}] [get_bd_cells axis_data_fifo_0]
-}
-
-
-addip axis_data_fifo axis_data_fifo_1
-set_property -dict [list CONFIG.TDATA_NUM_BYTES.VALUE_SRC USER CONFIG.TID_WIDTH.VALUE_SRC USER CONFIG.TDEST_WIDTH.VALUE_SRC USER CONFIG.TUSER_WIDTH.VALUE_SRC USER CONFIG.HAS_TSTRB.VALUE_SRC USER CONFIG.HAS_TLAST.VALUE_SRC USER CONFIG.HAS_TKEEP.VALUE_SRC USER] [get_bd_cells axis_data_fifo_1]
-set_property -dict [list CONFIG.TDATA_NUM_BYTES {64} CONFIG.FIFO_DEPTH {16} CONFIG.HAS_TKEEP {1} CONFIG.HAS_TLAST {1}] [get_bd_cells axis_data_fifo_1]
-if {[get_property "CONFIG.FIFO_MEMORY_TYPE" [get_bd_cells axis_data_fifo_1]] != ""} {
-	set_property -dict [list CONFIG.FIFO_MEMORY_TYPE {distributed}] [get_bd_cells axis_data_fifo_1]
-}
-
+addip fifo_generator axis_data_fifo_1
+set_property -dict [list CONFIG.INTERFACE_TYPE {AXI_STREAM} CONFIG.Reset_Type {Asynchronous_Reset} CONFIG.TDATA_NUM_BYTES {64} CONFIG.TUSER_WIDTH {0} CONFIG.Enable_TLAST {true} CONFIG.TSTRB_WIDTH {64} CONFIG.HAS_TKEEP {true} CONFIG.TKEEP_WIDTH {64} CONFIG.FIFO_Implementation_wach {Common_Clock_Distributed_RAM} CONFIG.Full_Threshold_Assert_Value_wach {15} CONFIG.Empty_Threshold_Assert_Value_wach {14} CONFIG.FIFO_Implementation_wdch {Common_Clock_Builtin_FIFO} CONFIG.FIFO_Implementation_wrch {Common_Clock_Distributed_RAM} CONFIG.Full_Threshold_Assert_Value_wrch {15} CONFIG.Empty_Threshold_Assert_Value_wrch {14} CONFIG.FIFO_Implementation_rach {Common_Clock_Distributed_RAM} CONFIG.Full_Threshold_Assert_Value_rach {15} CONFIG.Empty_Threshold_Assert_Value_rach {14} CONFIG.FIFO_Implementation_rdch {Common_Clock_Builtin_FIFO} CONFIG.FIFO_Implementation_axis {Common_Clock_Distributed_RAM} CONFIG.FIFO_Application_Type_axis {Low_Latency_Data_FIFO} CONFIG.Input_Depth_axis {16} CONFIG.Full_Threshold_Assert_Value_axis {15} CONFIG.Empty_Threshold_Assert_Value_axis {14}] [get_bd_cells axis_data_fifo_1]
 
 make_bd_pins_external  [get_bd_pins arp_server_100g_0/clk]
 make_bd_pins_external  [get_bd_pins arp_server_100g_0/rst]
@@ -73,12 +62,12 @@ connect_bd_net [get_bd_ports myIP] [get_bd_pins udp_ip_server_100g_0/myIP]
 connect_bd_net [get_bd_ports clk] [get_bd_pins udp_ip_server_100g_0/clk]
 connect_bd_net [get_bd_ports clk] [get_bd_pins ether_protocol_assembler_0/ap_clk]
 connect_bd_net [get_bd_ports clk] [get_bd_pins ether_protocol_spliter_0/ap_clk]
-connect_bd_net [get_bd_ports clk] [get_bd_pins axis_data_fifo_0/s_axis_aclk]
-connect_bd_net [get_bd_ports clk] [get_bd_pins axis_data_fifo_1/s_axis_aclk]
+connect_bd_net [get_bd_ports clk] [get_bd_pins axis_data_fifo_0/s_aclk]
+connect_bd_net [get_bd_ports clk] [get_bd_pins axis_data_fifo_1/s_aclk]
 connect_bd_net [get_bd_ports rst] [get_bd_pins util_vector_logic_0/Op1]
 
-connect_bd_net [get_bd_pins util_vector_logic_0/Res] [get_bd_pins axis_data_fifo_0/s_axis_aresetn]
-connect_bd_net [get_bd_pins util_vector_logic_0/Res] [get_bd_pins axis_data_fifo_1/s_axis_aresetn]
+connect_bd_net [get_bd_pins util_vector_logic_0/Res] [get_bd_pins axis_data_fifo_0/s_aresetn]
+connect_bd_net [get_bd_pins util_vector_logic_0/Res] [get_bd_pins axis_data_fifo_1/s_aresetn]
 connect_bd_net [get_bd_ports rst] [get_bd_pins ether_protocol_assembler_0/ap_rst]
 connect_bd_net [get_bd_ports rst] [get_bd_pins ether_protocol_spliter_0/ap_rst]
 connect_bd_net [get_bd_ports rst] [get_bd_pins udp_ip_server_100g_0/rst]
