@@ -19,12 +19,12 @@ set_property -dict [list CONFIG.Fifo_Implementation {Common_Clock_Block_RAM} CON
 addip fifo_generator fifo_generator_1
 set_property -dict [list CONFIG.Fifo_Implementation {Common_Clock_Block_RAM} CONFIG.Performance_Options {First_Word_Fall_Through} CONFIG.Input_Data_Width {161} CONFIG.Input_Depth {256} CONFIG.Output_Data_Width {161} CONFIG.Output_Depth {256} CONFIG.Use_Embedded_Registers {false} CONFIG.Reset_Type {Asynchronous_Reset} CONFIG.Full_Flags_Reset_Value {1} CONFIG.Valid_Flag {true} CONFIG.Use_Extra_Logic {true} CONFIG.Data_Count_Width {9} CONFIG.Write_Data_Count_Width {9} CONFIG.Read_Data_Count_Width {9} CONFIG.Full_Threshold_Assert_Value {255} CONFIG.Full_Threshold_Negate_Value {254} CONFIG.Empty_Threshold_Assert_Value {4} CONFIG.Empty_Threshold_Negate_Value {5} CONFIG.Enable_Safety_Circuit {false}] [get_bd_cells fifo_generator_1]
 
-addip axis_data_fifo axis_data_fifo_0
-set_property -dict [list CONFIG.TDATA_NUM_BYTES.VALUE_SRC USER CONFIG.TUSER_WIDTH.VALUE_SRC USER CONFIG.TID_WIDTH.VALUE_SRC USER CONFIG.HAS_TLAST.VALUE_SRC USER CONFIG.HAS_TSTRB.VALUE_SRC USER CONFIG.TDEST_WIDTH.VALUE_SRC USER CONFIG.HAS_TKEEP.VALUE_SRC USER] [get_bd_cells axis_data_fifo_0]
-set_property -dict [list CONFIG.TDATA_NUM_BYTES {64} CONFIG.FIFO_DEPTH {256} CONFIG.HAS_TKEEP {1} CONFIG.HAS_TLAST {1}] [get_bd_cells axis_data_fifo_0]
-addip axis_data_fifo axis_data_fifo_1
-set_property -dict [list CONFIG.TDATA_NUM_BYTES.VALUE_SRC USER CONFIG.HAS_TLAST.VALUE_SRC USER CONFIG.HAS_TKEEP.VALUE_SRC USER CONFIG.TDEST_WIDTH.VALUE_SRC USER CONFIG.TID_WIDTH.VALUE_SRC USER CONFIG.TUSER_WIDTH.VALUE_SRC USER CONFIG.HAS_TSTRB.VALUE_SRC USER] [get_bd_cells axis_data_fifo_1]
-set_property -dict [list CONFIG.TDATA_NUM_BYTES {64} CONFIG.FIFO_DEPTH {256} CONFIG.HAS_TKEEP {1} CONFIG.HAS_TLAST {1}] [get_bd_cells axis_data_fifo_1]
+addip fifo_generator axis_data_fifo_0
+set_property -dict [list CONFIG.INTERFACE_TYPE {AXI_STREAM} CONFIG.Reset_Type {Asynchronous_Reset} CONFIG.TDATA_NUM_BYTES {64} CONFIG.TUSER_WIDTH {0} CONFIG.Enable_TLAST {true} CONFIG.TSTRB_WIDTH {64} CONFIG.HAS_TKEEP {true} CONFIG.TKEEP_WIDTH {64} CONFIG.FIFO_Implementation_wach {Common_Clock_Distributed_RAM} CONFIG.Full_Threshold_Assert_Value_wach {15} CONFIG.Empty_Threshold_Assert_Value_wach {14} CONFIG.FIFO_Implementation_wdch {Common_Clock_Builtin_FIFO} CONFIG.FIFO_Implementation_wrch {Common_Clock_Distributed_RAM} CONFIG.Full_Threshold_Assert_Value_wrch {15} CONFIG.Empty_Threshold_Assert_Value_wrch {14} CONFIG.FIFO_Implementation_rach {Common_Clock_Distributed_RAM} CONFIG.Full_Threshold_Assert_Value_rach {15} CONFIG.Empty_Threshold_Assert_Value_rach {14} CONFIG.FIFO_Implementation_rdch {Common_Clock_Builtin_FIFO} CONFIG.FIFO_Implementation_axis {Common_Clock_Block_RAM} CONFIG.Input_Depth_axis {256} CONFIG.Full_Threshold_Assert_Value_axis {255} CONFIG.Empty_Threshold_Assert_Value_axis {254}] [get_bd_cells axis_data_fifo_0]
+
+addip fifo_generator axis_data_fifo_1
+set_property -dict [list CONFIG.INTERFACE_TYPE {AXI_STREAM} CONFIG.Reset_Type {Asynchronous_Reset} CONFIG.TDATA_NUM_BYTES {64} CONFIG.TUSER_WIDTH {0} CONFIG.Enable_TLAST {true} CONFIG.TSTRB_WIDTH {64} CONFIG.HAS_TKEEP {true} CONFIG.TKEEP_WIDTH {64} CONFIG.FIFO_Implementation_wach {Common_Clock_Distributed_RAM} CONFIG.Full_Threshold_Assert_Value_wach {15} CONFIG.Empty_Threshold_Assert_Value_wach {14} CONFIG.FIFO_Implementation_wdch {Common_Clock_Builtin_FIFO} CONFIG.FIFO_Implementation_wrch {Common_Clock_Distributed_RAM} CONFIG.Full_Threshold_Assert_Value_wrch {15} CONFIG.Empty_Threshold_Assert_Value_wrch {14} CONFIG.FIFO_Implementation_rach {Common_Clock_Distributed_RAM} CONFIG.Full_Threshold_Assert_Value_rach {15} CONFIG.Empty_Threshold_Assert_Value_rach {14} CONFIG.FIFO_Implementation_rdch {Common_Clock_Builtin_FIFO} CONFIG.FIFO_Implementation_axis {Common_Clock_Block_RAM} CONFIG.Input_Depth_axis {256} CONFIG.Full_Threshold_Assert_Value_axis {255} CONFIG.Empty_Threshold_Assert_Value_axis {254}] [get_bd_cells axis_data_fifo_1]
+
 addip udp_eth_assemble udp_eth_assemble_0
 addip udp_ip_tx udp_ip_tx_0
 addip util_vector_logic util_vector_logic_0
@@ -82,8 +82,8 @@ connect_bd_net [get_bd_ports clk] [get_bd_pins payload_checksum_0/ap_clk]
 connect_bd_net [get_bd_ports clk] [get_bd_pins udp_eth_assemble_0/ap_clk]
 connect_bd_net [get_bd_ports clk] [get_bd_pins action_excecutor_0/ap_clk]
 connect_bd_net [get_bd_ports clk] [get_bd_pins action_generator_0/ap_clk]
-connect_bd_net [get_bd_ports clk] [get_bd_pins axis_data_fifo_0/s_axis_aclk]
-connect_bd_net [get_bd_ports clk] [get_bd_pins axis_data_fifo_1/s_axis_aclk]
+connect_bd_net [get_bd_ports clk] [get_bd_pins axis_data_fifo_0/s_aclk]
+connect_bd_net [get_bd_ports clk] [get_bd_pins axis_data_fifo_1/s_aclk]
 connect_bd_net [get_bd_ports clk] [get_bd_pins fifo_generator_0/clk]
 connect_bd_net [get_bd_ports clk] [get_bd_pins fifo_generator_1/clk]
 connect_bd_net [get_bd_ports clk] [get_bd_pins udp_ip_tx_0/ap_clk]
@@ -96,8 +96,8 @@ connect_bd_net [get_bd_ports rst] [get_bd_pins action_generator_0/ap_rst]
 connect_bd_net [get_bd_ports rst] [get_bd_pins util_vector_logic_0/Op1]
 connect_bd_net [get_bd_ports rst] [get_bd_pins fifo_generator_0/rst]
 connect_bd_net [get_bd_ports rst] [get_bd_pins fifo_generator_1/rst]
-connect_bd_net [get_bd_pins util_vector_logic_0/Res] [get_bd_pins axis_data_fifo_0/s_axis_aresetn]
-connect_bd_net [get_bd_pins axis_data_fifo_1/s_axis_aresetn] [get_bd_pins util_vector_logic_0/Res]
+connect_bd_net [get_bd_pins util_vector_logic_0/Res] [get_bd_pins axis_data_fifo_0/s_aresetn]
+connect_bd_net [get_bd_pins util_vector_logic_0/Res] [get_bd_pins axis_data_fifo_1/s_aresetn]
 connect_bd_net [get_bd_pins udp_ip_receive_0/meta_out_src_ip_V] [get_bd_pins action_generator_0/meta_in_src_ip_V]
 connect_bd_net [get_bd_pins udp_ip_receive_0/meta_out_protocol_header_V] [get_bd_pins action_generator_0/meta_in_protocol_header_V]
 connect_bd_net [get_bd_pins udp_ip_receive_0/meta_out_checksum_V] [get_bd_pins action_generator_0/meta_in_checksum_V]
