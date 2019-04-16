@@ -1,3 +1,6 @@
+Shout out to the 996.icu project, programmer lives matter!<br>
+[![Badge](https://img.shields.io/badge/link-996.icu-%23FF4D5B.svg)](https://996.icu/#/zh_CN)
+
 # GULF-Stream
 100G UDP Link For AXI Stream
 
