@@ -3,7 +3,7 @@ set project_name "GULF_Stream"
 source ${project_dir}/scripts/util.tcl
 
 create_project $project_name $project_dir/$project_name -part xczu19eg-ffvc1760-2-i
-set_property board_part fidus.com:sidewinder100:part0:1.0 [current_project]
+#set_property board_part fidus.com:sidewinder100:part0:1.0 [current_project]
 create_bd_design $project_name
 
 set_property ip_repo_paths [list "${project_dir}/../hls_ips" "$project_dir"] [current_project]
@@ -12,8 +12,8 @@ update_ip_catalog -rebuild
 addip util_vector_logic util_vector_logic_0
 set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {not} CONFIG.LOGO_FILE {data/sym_notgate.png}] [get_bd_cells util_vector_logic_0]
 
-create_bd_cell -type ip -vlnv Qianfeng_Clark_Shen:user:udp_ip_server_100g:1.0 udp_ip_server_100g_0
-create_bd_cell -type ip -vlnv Qianfeng_Clark_Shen:user:arp_server_100g:1.0 arp_server_100g_0
+addip udp_ip_server_100g udp_ip_server_100g_0
+addip arp_server_100g arp_server_100g_0
 addip ether_protocol_spliter ether_protocol_spliter_0
 addip ether_protocol_assembler ether_protocol_assembler_0
 
@@ -96,94 +96,72 @@ connect_bd_net [get_bd_pins axis_data_fifo_1/m_axis_tready] [get_bd_pins ether_p
 connect_bd_net [get_bd_pins axis_data_fifo_1/m_axis_tdata] [get_bd_pins ether_protocol_assembler_0/eth_ip_in_data_V]
 connect_bd_net [get_bd_pins axis_data_fifo_1/m_axis_tkeep] [get_bd_pins ether_protocol_assembler_0/eth_ip_in_keep_V]
 connect_bd_net [get_bd_pins axis_data_fifo_1/m_axis_tlast] [get_bd_pins ether_protocol_assembler_0/eth_ip_in_last_V]
-
 validate_bd_design
-make_wrapper -files [get_files $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/${project_name}.bd] -top
-add_files -norecurse $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/hdl/${project_name}_wrapper.v
-save_bd_design
+make_wrapper -files [get_files /home/owl/git_repos/GULF-Stream_develop/ip_repo/assembled_ips/GULF_Stream/GULF_Stream.srcs/sources_1/bd/GULF_Stream/GULF_Stream.bd] -top
 
-ipx::package_project -root_dir $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name} -vendor Qianfeng_Clark_Shen -library user -taxonomy /UserIP
-set_property vendor_display_name {Qianfeng (Clark) Shen} [ipx::current_core]
+save_bd_design
+import_files -norecurse $project_dir/../../src/full_core/GULF_Stream_top.v
+ipx::package_project -root_dir $project_dir/$project_name/${project_name}.srcs/sources_1 -vendor clarkshen.com -library user -taxonomy /UserIP
+set_property vendor_display_name {clarkshen.com} [ipx::current_core]
 set_property name $project_name [ipx::current_core]
 set_property display_name $project_name [ipx::current_core]
 set_property description $project_name [ipx::current_core]
 
-ipx::add_bus_interface m_axis [ipx::current_core]
-set_property abstraction_type_vlnv xilinx.com:interface:axis_rtl:1.0 [ipx::get_bus_interfaces m_axis -of_objects [ipx::current_core]]
-set_property bus_type_vlnv xilinx.com:interface:axis:1.0 [ipx::get_bus_interfaces m_axis -of_objects [ipx::current_core]]
-set_property interface_mode master [ipx::get_bus_interfaces m_axis -of_objects [ipx::current_core]]
-set_property display_name m_axis [ipx::get_bus_interfaces m_axis -of_objects [ipx::current_core]]
-ipx::add_port_map TDATA [ipx::get_bus_interfaces m_axis -of_objects [ipx::current_core]]
-set_property physical_name eth_out_data_V [ipx::get_port_maps TDATA -of_objects [ipx::get_bus_interfaces m_axis -of_objects [ipx::current_core]]]
-ipx::add_port_map TLAST [ipx::get_bus_interfaces m_axis -of_objects [ipx::current_core]]
-set_property physical_name eth_out_last_V [ipx::get_port_maps TLAST -of_objects [ipx::get_bus_interfaces m_axis -of_objects [ipx::current_core]]]
-ipx::add_port_map TVALID [ipx::get_bus_interfaces m_axis -of_objects [ipx::current_core]]
-set_property physical_name eth_out_valid_V [ipx::get_port_maps TVALID -of_objects [ipx::get_bus_interfaces m_axis -of_objects [ipx::current_core]]]
-ipx::add_port_map TKEEP [ipx::get_bus_interfaces m_axis -of_objects [ipx::current_core]]
-set_property physical_name eth_out_keep_V [ipx::get_port_maps TKEEP -of_objects [ipx::get_bus_interfaces m_axis -of_objects [ipx::current_core]]]
-ipx::add_port_map TREADY [ipx::get_bus_interfaces m_axis -of_objects [ipx::current_core]]
-set_property physical_name eth_out_ready_V [ipx::get_port_maps TREADY -of_objects [ipx::get_bus_interfaces m_axis -of_objects [ipx::current_core]]]
+set_property display_name {ip address} [ipgui::get_guiparamspec -name "IP_ADDR" -component [ipx::current_core] ]
+set_property widget {hexEdit} [ipgui::get_guiparamspec -name "IP_ADDR" -component [ipx::current_core] ]
 
-ipx::add_bus_interface s_axis [ipx::current_core]
-set_property abstraction_type_vlnv xilinx.com:interface:axis_rtl:1.0 [ipx::get_bus_interfaces s_axis -of_objects [ipx::current_core]]
-set_property bus_type_vlnv xilinx.com:interface:axis:1.0 [ipx::get_bus_interfaces s_axis -of_objects [ipx::current_core]]
-set_property interface_mode slave [ipx::get_bus_interfaces s_axis -of_objects [ipx::current_core]]
-set_property display_name s_axis [ipx::get_bus_interfaces s_axis -of_objects [ipx::current_core]]
-ipx::add_port_map TDATA [ipx::get_bus_interfaces s_axis -of_objects [ipx::current_core]]
-set_property physical_name s_axis_data_V [ipx::get_port_maps TDATA -of_objects [ipx::get_bus_interfaces s_axis -of_objects [ipx::current_core]]]
-ipx::add_port_map TLAST [ipx::get_bus_interfaces s_axis -of_objects [ipx::current_core]]
-set_property physical_name s_axis_last_V [ipx::get_port_maps TLAST -of_objects [ipx::get_bus_interfaces s_axis -of_objects [ipx::current_core]]]
-ipx::add_port_map TVALID [ipx::get_bus_interfaces s_axis -of_objects [ipx::current_core]]
-set_property physical_name s_axis_valid_V [ipx::get_port_maps TVALID -of_objects [ipx::get_bus_interfaces s_axis -of_objects [ipx::current_core]]]
-ipx::add_port_map TKEEP [ipx::get_bus_interfaces s_axis -of_objects [ipx::current_core]]
-set_property physical_name s_axis_keep_V [ipx::get_port_maps TKEEP -of_objects [ipx::get_bus_interfaces s_axis -of_objects [ipx::current_core]]]
+set_property display_name {gateway} [ipgui::get_guiparamspec -name "GATEWAY" -component [ipx::current_core] ]
+set_property widget {hexEdit} [ipgui::get_guiparamspec -name "GATEWAY" -component [ipx::current_core] ]
 
-ipx::associate_bus_interfaces -busif payload_from_user -clock clk [ipx::current_core]
-ipx::associate_bus_interfaces -busif payload_to_user -clock clk [ipx::current_core]
-ipx::associate_bus_interfaces -busif m_axis -clock clk [ipx::current_core]
-ipx::associate_bus_interfaces -busif s_axis -clock clk [ipx::current_core]
+set_property display_name {netmask} [ipgui::get_guiparamspec -name "NETMASK" -component [ipx::current_core] ]
+set_property widget {hexEdit} [ipgui::get_guiparamspec -name "NETMASK" -component [ipx::current_core] ]
 
-ipx::remove_bus_interface user_GULF_stream_config [ipx::current_core]
+set_property display_name {mac address} [ipgui::get_guiparamspec -name "MAC_ADDR" -component [ipx::current_core] ]
+set_property widget {hexEdit} [ipgui::get_guiparamspec -name "MAC_ADDR" -component [ipx::current_core] ]
 
-ipx::add_bus_interface meta_rx [ipx::current_core]
-set_property abstraction_type_vlnv clarkshen.com:user:GULF_stream_meta_rtl:1.0 [ipx::get_bus_interfaces meta_rx -of_objects [ipx::current_core]]
-set_property bus_type_vlnv clarkshen.com:user:GULF_stream_meta:1.0 [ipx::get_bus_interfaces meta_rx -of_objects [ipx::current_core]]
-set_property interface_mode master [ipx::get_bus_interfaces meta_rx -of_objects [ipx::current_core]]
-set_property display_name meta_rx [ipx::get_bus_interfaces meta_rx -of_objects [ipx::current_core]]
-ipx::add_port_map remote_port [ipx::get_bus_interfaces meta_rx -of_objects [ipx::current_core]]
-set_property physical_name remote_port_rx [ipx::get_port_maps remote_port -of_objects [ipx::get_bus_interfaces meta_rx -of_objects [ipx::current_core]]]
-ipx::add_port_map local_port [ipx::get_bus_interfaces meta_rx -of_objects [ipx::current_core]]
-set_property physical_name local_port_rx [ipx::get_port_maps local_port -of_objects [ipx::get_bus_interfaces meta_rx -of_objects [ipx::current_core]]]
-ipx::add_port_map remote_ip [ipx::get_bus_interfaces meta_rx -of_objects [ipx::current_core]]
-set_property physical_name remote_ip_rx [ipx::get_port_maps remote_ip -of_objects [ipx::get_bus_interfaces meta_rx -of_objects [ipx::current_core]]]
+set_property display_name {Enable AXI-LITE configuration interface} [ipgui::get_guiparamspec -name "HAS_AXIL" -component [ipx::current_core] ]
+set_property widget {textEdit} [ipgui::get_guiparamspec -name "HAS_AXIL" -component [ipx::current_core] ]
+set_property widget {checkBox} [ipgui::get_guiparamspec -name "HAS_AXIL" -component [ipx::current_core] ]
+set_property value false [ipx::get_user_parameters HAS_AXIL -of_objects [ipx::current_core]]
+set_property value false [ipx::get_hdl_parameters HAS_AXIL -of_objects [ipx::current_core]]
+set_property value_format bool [ipx::get_user_parameters HAS_AXIL -of_objects [ipx::current_core]]
+set_property value_format bool [ipx::get_hdl_parameters HAS_AXIL -of_objects [ipx::current_core]]
 
-ipx::add_bus_interface meta_tx [ipx::current_core]
-set_property abstraction_type_vlnv clarkshen.com:user:GULF_stream_meta_rtl:1.0 [ipx::get_bus_interfaces meta_tx -of_objects [ipx::current_core]]
-set_property bus_type_vlnv clarkshen.com:user:GULF_stream_meta:1.0 [ipx::get_bus_interfaces meta_tx -of_objects [ipx::current_core]]
-set_property display_name meta_tx [ipx::get_bus_interfaces meta_tx -of_objects [ipx::current_core]]
-ipx::add_port_map remote_port [ipx::get_bus_interfaces meta_tx -of_objects [ipx::current_core]]
-set_property physical_name remote_port_tx [ipx::get_port_maps remote_port -of_objects [ipx::get_bus_interfaces meta_tx -of_objects [ipx::current_core]]]
-ipx::add_port_map local_port [ipx::get_bus_interfaces meta_tx -of_objects [ipx::current_core]]
-set_property physical_name local_port_tx [ipx::get_port_maps local_port -of_objects [ipx::get_bus_interfaces meta_tx -of_objects [ipx::current_core]]]
-ipx::add_port_map remote_ip [ipx::get_bus_interfaces meta_tx -of_objects [ipx::current_core]]
-set_property physical_name remote_ip_tx [ipx::get_port_maps remote_ip -of_objects [ipx::get_bus_interfaces meta_tx -of_objects [ipx::current_core]]]
+ipx::add_user_parameter ENDIANNESS [ipx::current_core]
+set_property value_resolve_type user [ipx::get_user_parameters ENDIANNESS -of_objects [ipx::current_core]]
+ipgui::add_param -name {ENDIANNESS} -component [ipx::current_core]
+set_property display_name {Endianness} [ipgui::get_guiparamspec -name "ENDIANNESS" -component [ipx::current_core] ]
+set_property widget {radioGroup} [ipgui::get_guiparamspec -name "ENDIANNESS" -component [ipx::current_core] ]
+set_property layout {horizontal} [ipgui::get_guiparamspec -name "ENDIANNESS" -component [ipx::current_core] ]
+set_property value 1 [ipx::get_user_parameters ENDIANNESS -of_objects [ipx::current_core]]
+set_property value_validation_type pairs [ipx::get_user_parameters ENDIANNESS -of_objects [ipx::current_core]]
+set_property value_validation_pairs {{Big Endian} 1 {Little Endian} 0} [ipx::get_user_parameters ENDIANNESS -of_objects [ipx::current_core]]
 
-ipx::add_bus_interface meta_config [ipx::current_core]
-set_property abstraction_type_vlnv clarkshen.com:user:GULF_stream_config_rtl:1.0 [ipx::get_bus_interfaces meta_config -of_objects [ipx::current_core]]
-set_property bus_type_vlnv clarkshen.com:user:GULF_stream_config:1.0 [ipx::get_bus_interfaces meta_config -of_objects [ipx::current_core]]
-set_property interface_mode master [ipx::get_bus_interfaces meta_config -of_objects [ipx::current_core]]
-set_property display_name meta_config [ipx::get_bus_interfaces meta_config -of_objects [ipx::current_core]]
-set_property interface_mode slave [ipx::get_bus_interfaces meta_config -of_objects [ipx::current_core]]
-ipx::add_port_map myIP [ipx::get_bus_interfaces meta_config -of_objects [ipx::current_core]]
-set_property physical_name myIP [ipx::get_port_maps myIP -of_objects [ipx::get_bus_interfaces meta_config -of_objects [ipx::current_core]]]
-ipx::add_port_map myMac [ipx::get_bus_interfaces meta_config -of_objects [ipx::current_core]]
-set_property physical_name myMac [ipx::get_port_maps myMac -of_objects [ipx::get_bus_interfaces meta_config -of_objects [ipx::current_core]]]
-ipx::add_port_map netmask [ipx::get_bus_interfaces meta_config -of_objects [ipx::current_core]]
-set_property physical_name netmask [ipx::get_port_maps netmask -of_objects [ipx::get_bus_interfaces meta_config -of_objects [ipx::current_core]]]
-ipx::add_port_map gateway [ipx::get_bus_interfaces meta_config -of_objects [ipx::current_core]]
-set_property physical_name gateway [ipx::get_port_maps gateway -of_objects [ipx::get_bus_interfaces meta_config -of_objects [ipx::current_core]]]
+set_property value true [ipx::get_user_parameters BIGENDIAN -of_objects [ipx::current_core]]
+set_property value true [ipx::get_hdl_parameters BIGENDIAN -of_objects [ipx::current_core]]
+set_property enablement_value false [ipx::get_user_parameters BIGENDIAN -of_objects [ipx::current_core]]
+set_property value_format bool [ipx::get_user_parameters BIGENDIAN -of_objects [ipx::current_core]]
+set_property value_format bool [ipx::get_hdl_parameters BIGENDIAN -of_objects [ipx::current_core]]
+set_property value_tcl_expr {$ENDIANNESS == 1} [ipx::get_user_parameters BIGENDIAN -of_objects [ipx::current_core]]
+ipgui::remove_param -component [ipx::current_core] [ipgui::get_guiparamspec -name "BIGENDIAN" -component [ipx::current_core]]
 
-set_property core_revision 2 [ipx::current_core]
+ipgui::remove_page -component [ipx::current_core] [ipgui::get_pagespec -name "Page 0" -component [ipx::current_core]]
+ipgui::add_group -name {network parameters} -component [ipx::current_core] -display_name {network parameters}
+set_property tooltip {netparams} [ipgui::get_groupspec -name "network parameters" -component [ipx::current_core] ]
+ipgui::add_param -name {IP_ADDR} -component [ipx::current_core] -parent [ipgui::get_groupspec -name "network parameters" -component [ipx::current_core] ]
+ipgui::add_param -name {GATEWAY} -component [ipx::current_core] -parent [ipgui::get_groupspec -name "network parameters" -component [ipx::current_core] ]
+ipgui::add_param -name {NETMASK} -component [ipx::current_core] -parent [ipgui::get_groupspec -name "network parameters" -component [ipx::current_core] ]
+ipgui::add_param -name {MAC_ADDR} -component [ipx::current_core] -parent [ipgui::get_groupspec -name "network parameters" -component [ipx::current_core] ]
+ipgui::add_param -name {HAS_AXIL} -component [ipx::current_core]
+ipgui::move_param -component [ipx::current_core] -order 2 [ipgui::get_guiparamspec -name "HAS_AXIL" -component [ipx::current_core]]
+ipgui::add_static_text -name {Note} -component [ipx::current_core] -text {Note: This only affects the endianness of the AXI-Stream interfaces, the meta_rx and meta_tx are always in Big Endian format.}
+ipgui::move_text -component [ipx::current_core] -order 4 [ipgui::get_textspec -name "Note" -component [ipx::current_core]]
+
+set_property enablement_dependency {$HAS_AXIL = true} [ipx::get_bus_interfaces s_axictl -of_objects [ipx::current_core]]
+
+set_property supported_families {virtexu Beta virtexuplus Beta virtexuplusHBM Beta zynquplus Beta kintexu Beta kintexuplus Beta} [ipx::current_core]
+
+set_property core_revision 0 [ipx::current_core]
 ipx::create_xgui_files [ipx::current_core]
 ipx::update_checksums [ipx::current_core]
 ipx::save_core [ipx::current_core]

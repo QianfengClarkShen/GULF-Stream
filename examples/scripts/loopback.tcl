@@ -28,7 +28,7 @@ set_property -dict [list CONFIG.CONST_WIDTH {56} CONFIG.CONST_VAL {0}] [get_bd_c
 set_property -dict [list CONFIG.CONST_WIDTH {12} CONFIG.CONST_VAL {0}] [get_bd_cells eth_100g/zeroX12]
 set_property -dict [list CONFIG.CONST_WIDTH {10} CONFIG.CONST_VAL {0}] [get_bd_cells eth_100g/zeroX10]
 
-create_bd_cell -type ip -vlnv Qianfeng_Clark_Shen:user:lbus_axis_converter:1.0 eth_100g/lbus_axis_converter_0
+addip lbus_axis_converter eth_100g/lbus_axis_converter_0
 
 make_bd_intf_pins_external  [get_bd_intf_pins eth_100g/cmac_usplus_0/gt_ref_clk]
 make_bd_intf_pins_external  [get_bd_intf_pins eth_100g/cmac_usplus_0/gt_serial_port]
@@ -66,28 +66,16 @@ connect_bd_net [get_bd_pins eth_100g/zeroX56/dout] [get_bd_pins eth_100g/cmac_us
 ##################
 
 #make loopback GULF stream
-create_bd_cell -type ip -vlnv Qianfeng_Clark_Shen:user:GULF_Stream:1.0 GULF_Stream_0
+addip GULF_Stream GULF_Stream_0
 addip xlconstant rst
-addip xlconstant ip
-addip xlconstant gateway
-addip xlconstant netmask
-addip xlconstant mac
 set_property -dict [list CONFIG.CONST_VAL {0}] [get_bd_cells rst]
-set_property -dict [list CONFIG.CONST_WIDTH {32} CONFIG.CONST_VAL {0x0a0a0ef0}] [get_bd_cells ip]
-set_property -dict [list CONFIG.CONST_WIDTH {32} CONFIG.CONST_VAL {0x0a0a0e0a}] [get_bd_cells gateway]
-set_property -dict [list CONFIG.CONST_WIDTH {32} CONFIG.CONST_VAL {0xffffff00}] [get_bd_cells netmask]
-set_property -dict [list CONFIG.CONST_WIDTH {48} CONFIG.CONST_VAL {0x203ab490c564}] [get_bd_cells mac]
 
 connect_bd_intf_net [get_bd_intf_pins GULF_Stream_0/m_axis] [get_bd_intf_pins eth_100g/lbus_axis_converter_0/s_axis]
 connect_bd_intf_net [get_bd_intf_pins GULF_Stream_0/s_axis] [get_bd_intf_pins eth_100g/lbus_axis_converter_0/m_axis]
 connect_bd_net [get_bd_pins GULF_Stream_0/clk] [get_bd_pins eth_100g/cmac_usplus_0/gt_txusrclk2]
 connect_bd_intf_net [get_bd_intf_pins GULF_Stream_0/meta_rx] [get_bd_intf_pins GULF_Stream_0/meta_tx]
 connect_bd_intf_net [get_bd_intf_pins GULF_Stream_0/payload_to_user] [get_bd_intf_pins GULF_Stream_0/payload_from_user]
-connect_bd_net [get_bd_pins ip/dout] [get_bd_pins GULF_Stream_0/myIP]
-connect_bd_net [get_bd_pins mac/dout] [get_bd_pins GULF_Stream_0/myMac]
 connect_bd_net [get_bd_pins rst/dout] [get_bd_pins GULF_Stream_0/rst]
-connect_bd_net [get_bd_pins gateway/dout] [get_bd_pins GULF_Stream_0/gateway]
-connect_bd_net [get_bd_pins netmask/dout] [get_bd_pins GULF_Stream_0/netmask]
 ###########
 
 set_property name init [get_bd_intf_ports CLK_IN_D_0]

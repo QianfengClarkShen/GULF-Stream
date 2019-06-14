@@ -1,12 +1,12 @@
-set root_dir [file dirname [file dirname [file normalize [info script]]]]
+set project_dir [file dirname [file dirname [file normalize [info script]]]]
 set project_name "lbus_axis_converter"
-source ${root_dir}/scripts/util.tcl
+source ${project_dir}/scripts/util.tcl
 
-create_project $project_name $root_dir/$project_name -part xczu19eg-ffvc1760-2-i
-set_property board_part fidus.com:sidewinder100:part0:1.0 [current_project]
+create_project $project_name $project_dir/$project_name -part xczu19eg-ffvc1760-2-i
+#set_property board_part fidus.com:sidewinder100:part0:1.0 [current_project]
 create_bd_design "${project_name}"
 
-set_property ip_repo_paths [list "${root_dir}/../hls_ips" "${root_dir}/interfaces/lbus_definition"] [current_project]
+set_property ip_repo_paths [list "${project_dir}/../hls_ips" "${project_dir}/interfaces/lbus_definition"] [current_project]
 update_ip_catalog -rebuild
 
 addip lbus_fifo_read lbus_fifo_read_0
@@ -74,11 +74,11 @@ connect_bd_net [get_bd_pins lbus_fifo_read_0/error_V] [get_bd_pins util_vector_l
 
 save_bd_design
 
-make_wrapper -files [get_files $root_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/${project_name}.bd] -top
-add_files -norecurse $root_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/hdl/${project_name}_wrapper.v
+make_wrapper -files [get_files $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/${project_name}.bd] -top
+add_files -norecurse $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/hdl/${project_name}_wrapper.v
 
-ipx::package_project -root_dir $root_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name} -vendor Qianfeng_Clark_Shen -library user -taxonomy /UserIP
-set_property vendor_display_name {Qianfeng (Clark) Shen} [ipx::current_core]
+ipx::package_project -root_dir $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name} -vendor clarkshen.com -library user -taxonomy /UserIP
+set_property vendor_display_name {clarkshen.com} [ipx::current_core]
 set_property name $project_name [ipx::current_core]
 set_property display_name $project_name [ipx::current_core]
 set_property description $project_name [ipx::current_core]
@@ -230,14 +230,15 @@ set_property physical_name ${port_prefix}_2_mty_V_0 [ipx::get_port_maps lbus_seg
 ipx::add_port_map lbus_seg3_mty [ipx::get_bus_interfaces lbus_rx -of_objects [ipx::current_core]]
 set_property physical_name ${port_prefix}_3_mty_V_0 [ipx::get_port_maps lbus_seg3_mty -of_objects [ipx::get_bus_interfaces lbus_rx -of_objects [ipx::current_core]]]
 ipx::associate_bus_interfaces -busif lbus_rx -clock clk [ipx::current_core]
+set_property supported_families {virtexu Beta virtexuplus Beta virtexuplusHBM Beta zynquplus Beta kintexu Beta kintexuplus Beta} [ipx::current_core]
 
-set_property core_revision 2 [ipx::current_core]
+set_property core_revision 0 [ipx::current_core]
 ipx::create_xgui_files [ipx::current_core]
 ipx::update_checksums [ipx::current_core]
 ipx::save_core [ipx::current_core]
-set_property  ip_repo_paths [list "$root_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}" "${root_dir}/../hls_ips" "${root_dir}/interfaces/lbus_definition"] [current_project]
+set_property  ip_repo_paths [list "$project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}" "${project_dir}/../hls_ips" "${project_dir}/interfaces/lbus_definition"] [current_project]
 update_ip_catalog
 ipx::check_integrity -quiet [ipx::current_core]
-ipx::archive_core $root_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/${project_name}_1.0.zip [ipx::current_core]
+ipx::archive_core $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/${project_name}_1.0.zip [ipx::current_core]
 close_project
 exit

@@ -1,6 +1,6 @@
 all: GULF_Stream lbus_axis_converter
 
-GULF_Stream: scripts/full_core.tcl arp_server_100g udp_ip_server_100g ../hls_ips/ether_protocol_assembler ../hls_ips/ether_protocol_spliter
+GULF_Stream: scripts/full_core.tcl arp_server_100g udp_ip_server_100g ../hls_ips/ether_protocol_assembler ../hls_ips/ether_protocol_spliter ../../src/full_core/*
 	rm -rf GULF_Stream
 	vivado -mode tcl -source  scripts/full_core.tcl -nolog -nojournal
 
