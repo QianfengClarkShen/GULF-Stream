@@ -97,7 +97,7 @@ connect_bd_net [get_bd_pins axis_data_fifo_1/m_axis_tdata] [get_bd_pins ether_pr
 connect_bd_net [get_bd_pins axis_data_fifo_1/m_axis_tkeep] [get_bd_pins ether_protocol_assembler_0/eth_ip_in_keep_V]
 connect_bd_net [get_bd_pins axis_data_fifo_1/m_axis_tlast] [get_bd_pins ether_protocol_assembler_0/eth_ip_in_last_V]
 validate_bd_design
-make_wrapper -files [get_files /home/owl/git_repos/GULF-Stream_develop/ip_repo/assembled_ips/GULF_Stream/GULF_Stream.srcs/sources_1/bd/GULF_Stream/GULF_Stream.bd] -top
+make_wrapper -files [get_files $project_dir/$project_name/${project_name}.srcs/sources_1/bd/$project_name/${project_name}.bd] -top
 
 save_bd_design
 import_files -norecurse $project_dir/../../src/full_core/GULF_Stream_top.v
