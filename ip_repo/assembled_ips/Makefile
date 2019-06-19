@@ -16,5 +16,9 @@ udp_ip_server_100g: scripts/udp_ip.tcl ../hls_ips/udp_ip_server
 	rm -rf udp_ip_server_100g
 	vivado -mode tcl -source scripts/udp_ip.tcl -nolog -nojournal
 
+GULF_Stream_benchmark: ../hls_ips/payload_generator ../hls_ips/payload_validator ../hls_ips/PSInterface scripts/GULF_Stream_benchmark.tcl
+	rm -rf GULF_Stream_benchmark
+	vivado -mode tcl -source scripts/GULF_Stream_benchmark.tcl -nolog -nojournal
+
 clean:
 	rm -rf arp_server_100g lbus_axis_converter udp_ip_server_100g GULF_Stream

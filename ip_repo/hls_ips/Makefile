@@ -36,5 +36,20 @@ udp_ip_server: scripts/udp_ip_server/* ../../src/udp_ip_server/*
 	vivado_hls scripts/udp_ip_server/udp_eth_assemble.tcl
 	rm -f vivado_hls.log
 
+payload_generator: scripts/benchmark/payload_generator.tcl ../../src/benchmark/benchmark.h ../../src/benchmark/util.cpp ../../src/benchmark/payload_generator.cpp
+	rm -rf payload_generator
+	vivado_hls scripts/benchmark/payload_generator.tcl
+	rm -f vivado_hls.log
+
+payload_validator: scripts/benchmark/payload_validator.tcl ../../src/benchmark/benchmark.h ../../src/benchmark/payload_validator.cpp
+	rm -rf payload_validator
+	vivado_hls scripts/benchmark/payload_validator.tcl
+	rm -f vivado_hls.log
+
+PSInterface: scripts/benchmark/PSInterface.tcl ../../src/benchmark/PSInterface.cpp
+	rm -rf PSInterface
+	vivado_hls scripts/benchmark/PSInterface.tcl
+	rm -f vivado_hls.log
+
 clean:
-	rm -rf arp_server lbus_axis_converter ether_protocol_assembler ether_protocol_spliter udp_ip_server
+	rm -rf arp_server lbus_axis_converter ether_protocol_assembler ether_protocol_spliter udp_ip_server payload_generator payload_validator PSInterface

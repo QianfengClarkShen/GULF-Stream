@@ -67,6 +67,7 @@ connect_bd_net [get_bd_pins eth_100g/zeroX56/dout] [get_bd_pins eth_100g/cmac_us
 
 #make loopback GULF stream
 addip GULF_Stream GULF_Stream_0
+set_property -dict [list CONFIG.HAS_AXIL {true}] [get_bd_cells GULF_Stream_0]
 addip xlconstant rst
 set_property -dict [list CONFIG.CONST_VAL {0}] [get_bd_cells rst]
 
@@ -83,6 +84,28 @@ set_property name gt_ref [get_bd_intf_ports gt_ref_clk_0]
 set_property CONFIG.FREQ_HZ 200000000 [get_bd_intf_ports /init]
 add_files -fileset constrs_1 -norecurse $project_dir/constraints/sidewinder100.xdc
 
+#connect AXI-LITE configuration interface
+addip zynq_ultra_ps_e zynq_ultra_ps_e_0
+source $script_dir/ps_preset.tcl
+set_property -dict [apply_preset zynq_ultra_ps_e_0] [get_bd_cells zynq_ultra_ps_e_0]
+set_property -dict [list CONFIG.PSU__USE__S_AXI_GP2 {0}] [get_bd_cells zynq_ultra_ps_e_0]
+addip axi_interconnect axi_interconnect_0
+set_property -dict [list CONFIG.NUM_MI {1} CONFIG.ENABLE_ADVANCED_OPTIONS {0}] [get_bd_cells axi_interconnect_0]
+addip proc_sys_reset proc_sys_reset_0
+
+connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM0_FPD] -boundary_type upper [get_bd_intf_pins axi_interconnect_0/S00_AXI]
+connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_0/M00_AXI] [get_bd_intf_pins GULF_Stream_0/s_axictl]
+connect_bd_net [get_bd_pins eth_100g/gt_txusrclk2] [get_bd_pins axi_interconnect_0/ACLK] -boundary_type upper
+connect_bd_net [get_bd_pins eth_100g/gt_txusrclk2] [get_bd_pins axi_interconnect_0/S00_ACLK] -boundary_type upper
+connect_bd_net [get_bd_pins eth_100g/gt_txusrclk2] [get_bd_pins axi_interconnect_0/M00_ACLK] -boundary_type upper
+connect_bd_net [get_bd_pins eth_100g/gt_txusrclk2] [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
+connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0] [get_bd_pins proc_sys_reset_0/ext_reset_in]
+connect_bd_net [get_bd_pins proc_sys_reset_0/interconnect_aresetn] [get_bd_pins axi_interconnect_0/ARESETN]
+connect_bd_net [get_bd_pins proc_sys_reset_0/interconnect_aresetn] [get_bd_pins axi_interconnect_0/S00_ARESETN]
+connect_bd_net [get_bd_pins proc_sys_reset_0/interconnect_aresetn] [get_bd_pins axi_interconnect_0/M00_ARESETN]
+connect_bd_net [get_bd_pins eth_100g/gt_txusrclk2] [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_fpd_aclk]
+assign_bd_address
+#########################################
 validate_bd_design
 make_wrapper -files [get_files $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/${project_name}.bd] -top
 add_files -norecurse $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/hdl/${project_name}_wrapper.v
