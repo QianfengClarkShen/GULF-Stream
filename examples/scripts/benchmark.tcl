@@ -94,15 +94,7 @@ connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_0/M0
 connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_0/M01_AXI] [get_bd_intf_pins GULF_Stream_benchmark_0/AXILITE_Config]
 connect_bd_intf_net [get_bd_intf_pins GULF_Stream_benchmark_0/payload_m_axis] [get_bd_intf_pins GULF_Stream_0/payload_from_user]
 connect_bd_intf_net [get_bd_intf_pins GULF_Stream_0/payload_to_user] [get_bd_intf_pins GULF_Stream_benchmark_0/payload_s_axis]
-
-addip xlconstant port_num
-set_property -dict [list CONFIG.CONST_WIDTH {16}] [get_bd_cells port_num]
-connect_bd_net [get_bd_pins port_num/dout] [get_bd_pins GULF_Stream_0/remote_port_tx]
-connect_bd_net [get_bd_pins port_num/dout] [get_bd_pins GULF_Stream_0/local_port_tx]
-addip xlconstant remote_ip
-set_property -dict [list CONFIG.CONST_WIDTH {32} CONFIG.CONST_VAL {0x0a0a0ef0}] [get_bd_cells remote_ip]
-connect_bd_net [get_bd_pins remote_ip/dout] [get_bd_pins GULF_Stream_0/remote_ip_tx]
-
+connect_bd_intf_net [get_bd_intf_pins GULF_Stream_benchmark_0/user_GULF_stream_meta] [get_bd_intf_pins GULF_Stream_0/meta_tx]
 
 set_property name init [get_bd_intf_ports CLK_IN_D_0]
 set_property name gt_ref [get_bd_intf_ports gt_ref_clk_0]
@@ -113,6 +105,5 @@ validate_bd_design
 make_wrapper -files [get_files $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/${project_name}.bd] -top
 add_files -norecurse $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/hdl/${project_name}_wrapper.v
 save_bd_design
-return
 close_project
 exit

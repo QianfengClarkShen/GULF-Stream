@@ -25,6 +25,9 @@ make_bd_pins_external  [get_bd_pins payload_validator_0/s_axis_data_V]
 make_bd_pins_external  [get_bd_pins payload_validator_0/s_axis_keep_V]
 make_bd_pins_external  [get_bd_pins payload_validator_0/s_axis_last_V]
 make_bd_pins_external  [get_bd_pins payload_validator_0/s_axis_valid_V]
+make_bd_pins_external  [get_bd_pins PSInterface_0/remote_ip_V]
+make_bd_pins_external  [get_bd_pins PSInterface_0/remote_port_V]
+make_bd_pins_external  [get_bd_pins PSInterface_0/local_port_V]
 make_bd_intf_pins_external  [get_bd_intf_pins PSInterface_0/s_axi_AXILiteS]
 set_property name clk [get_bd_ports ap_clk_0]
 foreach port [get_bd_ports *_V_0] {
@@ -96,7 +99,6 @@ set_property physical_name s_axis_keep [ipx::get_port_maps TKEEP -of_objects [ip
 
 ipx::associate_bus_interfaces -busif payload_s_axis -clock clk [ipx::current_core]
 ipx::associate_bus_interfaces -busif payload_m_axis -clock clk [ipx::current_core]
-
 set_property core_revision 0 [ipx::current_core]
 ipx::create_xgui_files [ipx::current_core]
 ipx::update_checksums [ipx::current_core]

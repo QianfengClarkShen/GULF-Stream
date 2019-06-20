@@ -33,6 +33,9 @@ void PSInterface (
 	ap_uint<32>	axil_start,
 	ap_uint<32>	axil_pkt_num,
 	ap_uint<32>	axil_pkt_len,
+	ap_uint<32>	axil_remote_ip,
+	ap_uint<32>	axil_remote_port,
+	ap_uint<32>	axil_local_port,
 	ap_uint<32>	&axil_tx_timeElapse_high,
 	ap_uint<32>     &axil_tx_timeElapse_low,
 	ap_uint<32>	&axil_tx_done,
@@ -48,6 +51,9 @@ void PSInterface (
 	ap_uint<1>	&start,
 	ap_uint<32>	&pkt_num,
 	ap_uint<16>	&pkt_len,
+	ap_uint<32>	&remote_ip,
+	ap_uint<16>	&remote_port,
+	ap_uint<16>	&local_port,
 	ap_uint<64>	tx_timeElapse,
 	ap_uint<1>	tx_done,
 	ap_uint<64>	latency_sum,
@@ -61,6 +67,9 @@ void PSInterface (
 	#pragma HLS INTERFACE s_axilite port=axil_start
 	#pragma HLS INTERFACE s_axilite port=axil_pkt_num
 	#pragma HLS INTERFACE s_axilite port=axil_pkt_len
+	#pragma HLS INTERFACE s_axilite port=axil_remote_ip
+	#pragma HLS INTERFACE s_axilite port=axil_remote_port
+	#pragma HLS INTERFACE s_axilite port=axil_local_port
 	#pragma HLS INTERFACE s_axilite port=axil_tx_timeElapse_high
 	#pragma HLS INTERFACE s_axilite port=axil_tx_timeElapse_low
 	#pragma HLS INTERFACE s_axilite port=axil_tx_done
@@ -74,6 +83,9 @@ void PSInterface (
 	#pragma HLS INTERFACE ap_none port=start
 	#pragma HLS INTERFACE ap_none port=pkt_num
 	#pragma HLS INTERFACE ap_none port=pkt_len
+	#pragma HLS INTERFACE ap_none port=remote_ip
+	#pragma HLS INTERFACE ap_none port=remote_port
+	#pragma HLS INTERFACE ap_none port=local_port
 	#pragma HLS INTERFACE ap_none port=tx_timeElapse
 	#pragma HLS INTERFACE ap_none port=tx_done
 	#pragma HLS INTERFACE ap_none port=latency_sum
@@ -82,9 +94,12 @@ void PSInterface (
 	#pragma HLS INTERFACE ap_none port=rx_done
 	#pragma HLS INTERFACE ap_none port=rx_error
 
-	start 	=	axil_start[0];
-	pkt_num	=	axil_pkt_num;
-	pkt_len	=	axil_pkt_len;
+	start 		=	axil_start[0];
+	pkt_num		=	axil_pkt_num;
+	pkt_len		=	axil_pkt_len;
+	remote_ip	=	axil_remote_ip;
+	remote_port	=	axil_remote_port;
+	local_port	=	axil_local_port;
 
 	axil_rx_curr_cnt	=	rx_cnt;
 	axil_tx_timeElapse_high	=	tx_timeElapse(63,32);

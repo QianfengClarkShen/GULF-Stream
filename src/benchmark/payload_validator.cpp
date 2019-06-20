@@ -61,6 +61,12 @@ void payload_validator(
 	static ap_uint<1>	init_reg;
 	static ap_uint<64>	time_elapse_reg;
 
+	curr_cnt = packet_cnt+1;
+	error = error_reg;
+	done = done_reg;
+	latency_sum = latency_sum_reg;
+	time_elapse = time_elapse_reg;
+
 	if (!clear_reg & clear) {
 		error_reg = 0;
 		done_reg = 0;
@@ -71,13 +77,6 @@ void payload_validator(
 		latency_sum_reg = 0;
 		time_elapse_reg = 0;
 	} else {
-		error = error_reg;
-		done = done_reg;
-		curr_cnt = packet_cnt+1;
-		latency_sum = latency_sum_reg;
-		time_elapse = time_elapse_reg;
-		clear = clear_reg;
-
 		if (init_reg & !done_reg) {
 			time_elapse_reg++;
 		}
