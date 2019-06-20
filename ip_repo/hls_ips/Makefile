@@ -1,4 +1,4 @@
-all: arp_server lbus_axis_converter ether_protocol_assembler ether_protocol_spliter udp_ip_server payload_generator payload_validator PSInterface
+all: arp_server lbus_axis_converter ether_protocol_assembler ether_protocol_spliter udp_ip_server benchmark
 
 arp_server: scripts/arp_server/* ../../src/arp_server/*
 	rm -rf arp_server
