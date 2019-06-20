@@ -25,3 +25,6 @@ ip_repo/benchmark_ips/*
 !ip_repo/benchmark_ips/Makefile
 !ip_repo/benchmark_ips/scripts
 !ip_repo/benchmark_ips/scripts/*
+
+# ignore vivado log files
+**/vivado*
