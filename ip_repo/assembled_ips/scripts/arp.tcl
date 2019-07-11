@@ -3,7 +3,7 @@ set project_name "arp_server_100g"
 source ${project_dir}/scripts/util.tcl
 
 create_project $project_name $project_dir/$project_name -part xczu19eg-ffvc1760-2-i
-set_property board_part fidus.com:sidewinder100:part0:1.0 [current_project]
+#set_property board_part fidus.com:sidewinder100:part0:1.0 [current_project]
 create_bd_design $project_name
 
 set_property ip_repo_paths "${project_dir}/../hls_ips" [current_project]
@@ -57,8 +57,8 @@ save_bd_design
 make_wrapper -files [get_files $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/${project_name}.bd] -top
 add_files -norecurse $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/hdl/${project_name}_wrapper.v
 
-ipx::package_project -root_dir $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name} -vendor Qianfeng_Clark_Shen -library user -taxonomy /UserIP
-set_property vendor_display_name {Qianfeng (Clark) Shen} [ipx::current_core]
+ipx::package_project -root_dir $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name} -vendor clarkshen.com -library user -taxonomy /UserIP
+set_property vendor_display_name {clarkshen.com} [ipx::current_core]
 set_property name $project_name [ipx::current_core]
 set_property display_name $project_name [ipx::current_core]
 set_property description $project_name [ipx::current_core]
@@ -99,8 +99,9 @@ set_property physical_name arp_internal_resp_Mac_IP [ipx::get_port_maps TDATA -o
 ipx::add_port_map TVALID [ipx::get_bus_interfaces arp_internal_resp -of_objects [ipx::current_core]]
 set_property physical_name arp_internal_resp_valid [ipx::get_port_maps TVALID -of_objects [ipx::get_bus_interfaces arp_internal_resp -of_objects [ipx::current_core]]]
 ipx::associate_bus_interfaces -busif arp_internal_resp -clock clk [ipx::current_core]
+set_property supported_families {virtexu Beta virtexuplus Beta virtexuplusHBM Beta zynquplus Beta kintexu Beta kintexuplus Beta} [ipx::current_core]
 
-set_property core_revision 2 [ipx::current_core]
+set_property core_revision 0 [ipx::current_core]
 ipx::create_xgui_files [ipx::current_core]
 ipx::update_checksums [ipx::current_core]
 ipx::save_core [ipx::current_core]
