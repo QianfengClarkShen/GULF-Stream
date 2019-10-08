@@ -71,16 +71,15 @@ void axis2lbus(
 		keep2mty(s_axis.keep(47,32),lbus[1].mty);
 		keep2mty(s_axis.keep(31,16),lbus[2].mty);
 		keep2mty(s_axis.keep(15,0),lbus[3].mty);
+		if (s_axis.valid & ~s_axis.last) {
+			IN_PACKET = 1;
+		} else if (s_axis.valid & s_axis.last) {
+			IN_PACKET = 0;
+		}
 	} else {
 		lbus[0] = LBUS_DUMMY;
 		lbus[1] = LBUS_DUMMY;
 		lbus[2] = LBUS_DUMMY;
 		lbus[3] = LBUS_DUMMY;
-	}
-
-	if (s_axis.valid & ~s_axis.last) {
-		IN_PACKET = 1;
-	} else if (s_axis.valid & s_axis.last) {
-		IN_PACKET = 0;
 	}
 }
