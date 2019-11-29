@@ -30,7 +30,9 @@ set_property -dict [list CONFIG.CONST_WIDTH {10} CONFIG.CONST_VAL {0}] [get_bd_c
 addip lbus_axis_converter eth_100g/lbus_axis_converter_0
 
 make_bd_intf_pins_external  [get_bd_intf_pins eth_100g/cmac_usplus_0/gt_ref_clk]
-make_bd_intf_pins_external  [get_bd_intf_pins eth_100g/cmac_usplus_0/gt_serial_port]
+#make_bd_intf_pins_external  [get_bd_intf_pins eth_100g/cmac_usplus_0/gt_serial_port]
+make_bd_intf_pins_external  [get_bd_intf_pins eth_100g/cmac_usplus_0/gt_tx]
+make_bd_intf_pins_external  [get_bd_intf_pins eth_100g/cmac_usplus_0/gt_rx]
 make_bd_intf_pins_external  [get_bd_intf_pins eth_100g/util_ds_buf_0/CLK_IN_D]
 
 connect_bd_intf_net [get_bd_intf_pins eth_100g/lbus_axis_converter_0/lbus_tx] [get_bd_intf_pins eth_100g/cmac_usplus_0/lbus_tx]
