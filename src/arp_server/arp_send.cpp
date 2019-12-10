@@ -114,7 +114,7 @@ void arp_send(
 		arp_out_reg.src_ip = myIPReg;
 		arp_out_reg.dst_mac = BCAST_MAC;
 		arp_out_reg.dst_ip = send_req_fifo[send_req_fifo_rdidx];
-		arp_out_reg.valid = arp_out.ready;
+		arp_out_reg.valid = 1;
 		send_req_fifo_rdidx++;
 	} else if (send_resp_fifo_rdidx != send_resp_fifo_wridx) {
 		arp_out_reg.fixed_head = ARP_FIXED_HEAD;
@@ -123,7 +123,7 @@ void arp_send(
 		arp_out_reg.src_ip = myIPReg;
 		arp_out_reg.dst_mac = send_resp_fifo[send_resp_fifo_rdidx].mac;
 		arp_out_reg.dst_ip = send_resp_fifo[send_resp_fifo_rdidx].ip;
-		arp_out_reg.valid = arp_out.ready;
+		arp_out_reg.valid = 1;
 		send_resp_fifo_rdidx++;
 	} else {
 		arp_out_reg.valid = 0;
