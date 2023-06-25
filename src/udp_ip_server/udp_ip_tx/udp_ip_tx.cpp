@@ -56,7 +56,8 @@ void udp_ip_tx(
 #pragma HLS INTERFACE ap_none port = payload_out_ready
 #pragma HLS INTERFACE ap_none port = action_out
 #pragma HLS INTERFACE ap_none port = action_out_we
-#pragma HLS DATA_PACK variable = action_out
+
+#pragma HLS aggregate variable = action_out compact = bit
 
 #pragma HLS disaggregate variable = payload_in
 #pragma HLS disaggregate variable = payload_out

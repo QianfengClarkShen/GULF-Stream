@@ -43,9 +43,9 @@ struct AXIS_RAW
 const struct AXIS_RAW DUMMY = {0, 0, 0, 0};
 
 void ether_protocol_assembler(
-	AXIS_RAW eth_arp_in,
+	AXIS_RAW &eth_arp_in,
 	ap_uint<1> &arp_ready,
-	AXIS_RAW eth_ip_in,
+	AXIS_RAW &eth_ip_in,
 	ap_uint<1> &ip_ready,
 	AXIS_RAW &eth_out,
 	ap_uint<1> eth_out_ready)

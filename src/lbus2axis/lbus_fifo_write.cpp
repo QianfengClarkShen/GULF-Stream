@@ -46,8 +46,9 @@ void lbus_fifo_write(
 #pragma HLS INTERFACE ap_none port = lbus_fifo_pkt_end_we
 #pragma HLS INTERFACE ap_none port = error
 #pragma HLS array_partition variable = lbus complete dim = 0
-#pragma HLS DATA_PACK variable = lbus_fifo
-#pragma HLS DATA_PACK variable = lbus_fifo_pkt_end
+
+#pragma HLS aggregate variable = lbus_fifo compact = bit
+#pragma HLS aggregate variable = lbus_fifo_pkt_end compact = bit
 
 #pragma HLS disaggregate variable = lbus
 	// #pragma HLS disaggregate variable = lbus_fifo

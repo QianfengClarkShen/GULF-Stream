@@ -3,11 +3,11 @@
 void udp_eth_assemble(
 	ap_uint<48> myMac,
 	ap_uint<32> myIP,
-	ACTION_BOX action,
+	ACTION_BOX &action,
 	ap_uint<1> action_valid,
 	ap_uint<1> action_empty,
 	ap_uint<1> &action_re,
-	PAYLOAD_FULL payload_in,
+	PAYLOAD_FULL &payload_in,
 	ap_uint<1> &payload_ready,
 	AXIS_RAW &packet_out,
 	ap_uint<1> packet_out_ready)
@@ -23,7 +23,8 @@ void udp_eth_assemble(
 #pragma HLS INTERFACE ap_none port = payload_ready
 #pragma HLS INTERFACE ap_none port = packet_out
 #pragma HLS INTERFACE ap_none port = packet_out_ready
-#pragma HLS DATA_PACK variable = action
+
+#pragma HLS aggregate variable = action compact = bit
 
 // #pragma HLS disaggregate variable = action
 #pragma HLS disaggregate variable = payload_in

@@ -31,7 +31,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.// Copyright (c) 2019, Qianfen
 #include "udp_ip_rx.h"
 void action_generator(
 	HEADER_META &meta_in,
-	PAYLOAD_CHECKSUM payload_cksum,
+	PAYLOAD_CHECKSUM &payload_cksum,
 	ACTION_BOX &action_out,
 	ap_uint<1> &action_out_valid)
 {
@@ -40,7 +40,8 @@ void action_generator(
 #pragma HLS INTERFACE ap_none port = payload_cksum
 #pragma HLS INTERFACE ap_none port = action_out
 #pragma HLS INTERFACE ap_none port = action_out_valid
-#pragma HLS DATA_PACK variable = action_out
+
+#pragma HLS aggregate variable = action_out compact = bit
 
 #pragma HLS disaggregate variable = meta_in
 #pragma HLS disaggregate variable = payload_cksum
