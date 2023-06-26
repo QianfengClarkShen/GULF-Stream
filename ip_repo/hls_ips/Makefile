@@ -1,4 +1,4 @@
-all: arp_server lbus_axis_converter ether_protocol_assembler ether_protocol_spliter udp_ip_server benchmark
+all: arp_server ether_protocol_assembler ether_protocol_spliter udp_ip_server
 
 arp_server: scripts/arp_server/* ../../src/arp_server/*
 	rm -rf arp_server
@@ -29,4 +29,4 @@ udp_ip_server: scripts/udp_ip_server/* ../../src/udp_ip_server/*
 	rm -f vitis_hls.log
 
 clean:
-	rm -rf arp_server lbus_axis_converter ether_protocol_assembler ether_protocol_spliter udp_ip_server benchmark
+	rm -rf arp_server ether_protocol_assembler ether_protocol_spliter udp_ip_server
