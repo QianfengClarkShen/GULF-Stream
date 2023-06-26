@@ -31,7 +31,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.// Copyright (c) 2019, Qianfen
 #include "udp_ip_rx.h"
 void udp_ip_receive(
 	const ap_uint<32> myIP,
-	HEADER ip_in,
+	HEADER &ip_in,
 	HEADER_META &meta_out,
 	ARP_RESP &arp_internal_resp)
 {

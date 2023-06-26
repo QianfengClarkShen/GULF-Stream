@@ -30,11 +30,11 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.// Copyright (c) 2019, Qianfen
 #include <ap_int.h>
 #include "udp_ip_rx.h"
 void action_excecutor(
-	ACTION_BOX action,
+	ACTION_BOX &action,
 	ap_uint<1> action_valid,
 	ap_uint<1> action_empty,
 	ap_uint<1> &action_re,
-	PAYLOAD_FULL payload_in,
+	PAYLOAD_FULL &payload_in,
 	ap_uint<1> &payload_ready,
 	PAYLOAD_FULL &payload_out,
 	ap_uint<32> &src_ip,
@@ -52,7 +52,8 @@ void action_excecutor(
 #pragma HLS INTERFACE ap_none port = src_ip
 #pragma HLS INTERFACE ap_none port = src_port
 #pragma HLS INTERFACE ap_none port = dst_port
-#pragma HLS DATA_PACK variable = action
+
+#pragma HLS aggregate variable = action compact = bit
 
 // #pragma HLS disaggregate variable = action
 #pragma HLS disaggregate variable = payload_in

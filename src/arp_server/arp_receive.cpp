@@ -31,7 +31,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.// Copyright (c) 2019, Qianfen
 #include "arp_server.h"
 void arp_receive(
 	const ap_uint<32> myIP,
-	HEADER arp_in,
+	HEADER &arp_in,
 	ARP_RESP &arp_internal_resp,
 	ARP_RESP &call_for_responce,
 	ARP_RESP &arptable_dataout,

@@ -31,7 +31,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.// Copyright (c) 2019, Qianfen
 #include "ether_protocol_spliter.h"
 void ether_protocol_spliter(
 	ap_uint<48> myMacAddr,
-	AXIS_RAW s_axis,
+	AXIS_RAW &s_axis,
 	HEADER &arp,
 	HEADER &ip,
 	PAYLOAD &payload,

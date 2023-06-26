@@ -30,7 +30,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.// Copyright (c) 2019, Qianfen
 #include <ap_int.h>
 #include "axis2lbus.h"
 void axis2lbus(
-	AXISBUS s_axis,
+	AXISBUS &s_axis,
 	LBUS lbus[4],
 	ap_uint<1> lbus_ready,
 	ap_uint<1> &axis_ready)

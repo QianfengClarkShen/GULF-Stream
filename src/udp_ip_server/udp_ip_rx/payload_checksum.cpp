@@ -33,8 +33,8 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.// Copyright (c) 2019, Qianfen
 ap_uint<64> payload_length2keep(ap_uint<16> length);
 
 void payload_checksum(
-	PAYLOAD payload_in,
-	PAYLOADLEN payload_length,
+	PAYLOAD &payload_in,
+	PAYLOADLEN &payload_length,
 	PAYLOAD_FULL &payload_out,
 	PAYLOAD_CHECKSUM &checksum)
 {

@@ -55,8 +55,8 @@ void mty2keep(
 }
 
 void lbus_fifo_read(
-	LBUS_FIFO_DATA lbus_fifo,
-	LBUS_FIFO_END_DATA lbus_fifo_pkt_end,
+	LBUS_FIFO_DATA &lbus_fifo,
+	LBUS_FIFO_END_DATA &lbus_fifo_pkt_end,
 	ap_uint<1> lbus_fifo_empty,
 	ap_uint<1> lbus_fifo_pkt_end_empty,
 	ap_uint<1> lbus_fifo_valid,
@@ -77,8 +77,9 @@ void lbus_fifo_read(
 #pragma HLS INTERFACE ap_none port = lbus_fifo_pkt_end_valid
 #pragma HLS INTERFACE ap_none port = m_axis
 #pragma HLS INTERFACE ap_none port = error
-#pragma HLS DATA_PACK variable = lbus_fifo
-#pragma HLS DATA_PACK variable = lbus_fifo_pkt_end
+
+#pragma HLS aggregate variable = lbus_fifo compact = bit
+#pragma HLS aggregate variable = lbus_fifo_pkt_end compact = bit
 
 // #pragma HLS disaggregate variable = lbus_fifo
 // #pragma HLS disaggregate variable = lbus_fifo_pkt_end
