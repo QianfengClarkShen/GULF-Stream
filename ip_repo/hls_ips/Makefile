@@ -7,14 +7,6 @@ arp_server: scripts/arp_server/* ../../src/arp_server/*
 	vitis_hls scripts/arp_server/arp_send.tcl
 	rm -f vitis_hls.log
 
-lbus_axis_converter: scripts/axis2lbus/* scripts/lbus2axis/* ../../src/axis2lbus/* ../../src/lbus2axis/*
-	rm -rf lbus_axis_converter
-	mkdir -p lbus_axis_converter
-	vitis_hls scripts/axis2lbus/axis2lbus.tcl
-	vitis_hls scripts/lbus2axis/lbus_fifo_read.tcl
-	vitis_hls scripts/lbus2axis/lbus_fifo_write.tcl
-	rm -f vitis_hls.log
-
 ether_protocol_assembler: scripts/ether_protocol_assembler/* ../../src/ether_protocol_assembler/*
 	rm -rf ether_protocol_assembler
 	vitis_hls scripts/ether_protocol_assembler/ether_protocol_assembler.tcl
@@ -34,14 +26,6 @@ udp_ip_server: scripts/udp_ip_server/* ../../src/udp_ip_server/*
 	vitis_hls scripts/udp_ip_server/udp_ip_receive.tcl
 	vitis_hls scripts/udp_ip_server/udp_ip_tx.tcl
 	vitis_hls scripts/udp_ip_server/udp_eth_assemble.tcl
-	rm -f vitis_hls.log
-
-benchmark: scripts/benchmark/* ../../src/benchmark/*
-	rm -rf benchmark
-	mkdir -p benchmark
-	vitis_hls scripts/benchmark/payload_generator.tcl
-	vitis_hls scripts/benchmark/payload_validator.tcl
-	vitis_hls scripts/benchmark/PSInterface.tcl
 	rm -f vitis_hls.log
 
 clean:

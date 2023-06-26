@@ -3,7 +3,6 @@ set project_name "GULF_Stream"
 source ${project_dir}/scripts/util.tcl
 
 create_project $project_name $project_dir/$project_name -part xczu19eg-ffvc1760-2-i
-#set_property board_part fidus.com:sidewinder100:part0:1.0 [current_project]
 create_bd_design $project_name
 
 set_property ip_repo_paths [list "${project_dir}/../hls_ips" "$project_dir"] [current_project]
@@ -101,7 +100,7 @@ make_wrapper -files [get_files $project_dir/$project_name/${project_name}.srcs/s
 
 save_bd_design
 import_files -norecurse $project_dir/../../src/full_core/GULF_Stream_top.v
-ipx::package_project -root_dir $project_dir/$project_name/${project_name}.srcs/sources_1 -vendor clarkshen.com -library user -taxonomy /UserIP
+ipx::package_project -import_files -root_dir $project_dir/$project_name/${project_name}.srcs/sources_1 -vendor clarkshen.com -library user -taxonomy /UserIP
 set_property vendor_display_name {clarkshen.com} [ipx::current_core]
 set_property name $project_name [ipx::current_core]
 set_property display_name $project_name [ipx::current_core]

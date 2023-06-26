@@ -142,7 +142,7 @@ save_bd_design
 make_wrapper -files [get_files $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/${project_name}.bd] -top
 add_files -norecurse $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name}/hdl/${project_name}_wrapper.v
 
-ipx::package_project -root_dir $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name} -vendor clarkshen.com -library user -taxonomy /UserIP
+ipx::package_project -import_files -root_dir $project_dir/$project_name/${project_name}.srcs/sources_1/bd/${project_name} -vendor clarkshen.com -library user -taxonomy /UserIP
 set_property vendor_display_name {clarkshen.com} [ipx::current_core]
 set_property name $project_name [ipx::current_core]
 set_property display_name $project_name [ipx::current_core]
