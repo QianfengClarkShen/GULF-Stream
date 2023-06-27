@@ -370,11 +370,11 @@ module GULF_Stream_top #
 	GULF_Stream GULF_Stream_i (
 		.arp_status(arp_status),
 		.clk(clk),
-		.eth_out_data_V(m_axis_data_w),
-		.eth_out_keep_V(m_axis_keep_w),
-		.eth_out_last_V(m_axis_last_w),
-		.eth_out_ready_V(m_axis_ready_w),
-		.eth_out_valid_V(m_axis_valid_w),
+		.eth_out_data(m_axis_data_w),
+		.eth_out_keep(m_axis_keep_w),
+		.eth_out_last(m_axis_last_w),
+		.eth_out_ready(m_axis_ready_w),
+		.eth_out_valid(m_axis_valid_w),
 		.gateway(gateway),
 		.local_port_rx(local_port_rx),
 		.local_port_tx(local_port_tx),
@@ -395,10 +395,10 @@ module GULF_Stream_top #
 		.remote_port_rx(remote_port_rx),
 		.remote_port_tx(remote_port_tx),
 		.rst(rst),
-		.s_axis_data_V(s_axis_data_w),
-		.s_axis_keep_V(s_axis_keep_w),
-		.s_axis_last_V(s_axis_last_w),
-		.s_axis_valid_V(s_axis_valid_w)
+		.s_axis_data(s_axis_data_w),
+		.s_axis_keep(s_axis_keep_w),
+		.s_axis_last(s_axis_last_w),
+		.s_axis_valid(s_axis_valid_w)
 	);
 
 if (BIGENDIAN)
